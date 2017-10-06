@@ -1,0 +1,318 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+   "Description" : "Barracuda NextGen Firewall Demo Lab VPC",
+
+  "Parameters" : {
+
+
+   "ArchTagName" : {
+    	"Type" : "String",
+    	"Default" : "VPC",
+    	"Description" : "Enter the Modifier prepended to resources of this template"
+    },
+    "VPC" :{
+      "Type" : "String",
+      "Default" : " 10.100.0.0/16",
+      "Description" : "CIDR range for Hub VPC"
+    },
+    "PublicSubnet1" :{
+      "Type" : "String",
+      "Default" : " 10.100.0.0/24",
+      "Description" : "Public Subnet1"
+    },
+    "PublicSubnet2" :{
+      "Type" : "String",
+      "Default" : " 10.100.10.0/24",
+      "Description" : "Public Subnet1"
+    },
+    "PrivateSubnet1" :{
+      "Type" : "String",
+      "Default" : " 10.100.1.0/24",
+      "Description" : "Public Subnet1"
+    },
+    "PrivateSubnet2" :{
+      "Type" : "String",
+      "Default" : " 10.100.2.0/24",
+      "Description" : "Public Subnet1"
+    }
+
+  },
+
+
+  "Resources": {
+    "vpcNGF": {
+      "Type": "AWS::EC2::VPC",
+      "Properties": {
+        "CidrBlock": { "Ref" : "VPC"},
+        "InstanceTenancy": "default",
+        "EnableDnsSupport": "true",
+        "EnableDnsHostnames": "true",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {"Fn::Join" : ["", [{ "Ref": "ArchTagName"},"-VPC"
+              ]]}
+          },
+          {
+            "Key": "TemplateName",
+            "Value": { "Ref": "ArchTagName"}
+          }
+        ]
+      }
+    },
+
+    "subnetPublic1": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+      	"AvailabilityZone" : {"Fn::Select" : [ "0", { "Fn::GetAZs" : "" } ]},
+        "CidrBlock": { "Ref" :  "PublicSubnet1"},
+        "VpcId": {
+          "Ref": "vpcNGF"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {"Fn::Join" : ["", [{ "Ref": "ArchTagName"},"-PublicSubnet1"
+              ]]}
+          },
+          {
+            "Key": "TemplateName",
+            "Value": { "Ref": "ArchTagName"}
+          }
+        ]
+      }
+    },
+
+     "subnetPublic2": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+      	"AvailabilityZone" : {"Fn::Select" : [ "1", { "Fn::GetAZs" : "" } ]},
+        "CidrBlock":  { "Ref" :  "PublicSubnet2"},
+        "VpcId": {
+          "Ref": "vpcNGF"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {"Fn::Join" : ["", [{ "Ref": "ArchTagName"},"-PublicSubnet2"
+              ]]}
+          },
+          {
+            "Key": "TemplateName",
+            "Value": { "Ref": "ArchTagName"}
+          }
+        ]
+      }
+    },
+
+     "subnetPrivate1": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+      	"AvailabilityZone" : {"Fn::Select" : [ "0", { "Fn::GetAZs" : "" } ]},
+        "CidrBlock":  { "Ref" :  "PrivateSubnet1"},
+        "VpcId": {"Ref": "vpcNGF"},
+        "MapPublicIpOnLaunch" : "false",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value":  {"Fn::Join" : ["", [{ "Ref": "ArchTagName"},"-PrivateSubnet1"
+              ]]}
+          },
+          {
+            "Key": "TemplateName",
+            "Value": { "Ref": "ArchTagName"}
+          }
+        ]
+      }
+    },
+
+    "subnetPrivate2": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "AvailabilityZone" : {"Fn::Select" : [ "1", { "Fn::GetAZs" : "" } ]},
+        "CidrBlock":  { "Ref" :  "PrivateSubnet2"},
+        "VpcId": {"Ref": "vpcNGF"},
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {"Fn::Join" : ["", [{ "Ref": "ArchTagName"},"-PrivateSubnet2"
+              ]]}
+          },
+          {
+            "Key": "TemplateName",
+            "Value": { "Ref": "ArchTagName"}
+          }
+        ]
+      }
+    },
+
+
+      "igw": {
+      "Type": "AWS::EC2::InternetGateway",
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {"Fn::Join" : ["", [{ "Ref": "ArchTagName"},"-IGW"
+              ]]}
+          },
+          {
+            "Key": "TemplateName",
+            "Value": { "Ref": "ArchTagName"}
+          }
+        ]
+      }
+    },
+
+     "igwToInternet" : {
+       "Type" : "AWS::EC2::VPCGatewayAttachment",
+       "Properties" : {
+         "VpcId" : { "Ref" : "vpcNGF" },
+         "InternetGatewayId" : { "Ref" : "igw" }
+       }
+    },
+
+
+    "routeTablePublic" : {
+      "Type" : "AWS::EC2::RouteTable",
+      "Properties" : {
+        "VpcId" : { "Ref" : "vpcNGF" },
+         "Tags": [
+          {
+            "Key": "Name",
+            "Value": {"Fn::Join" : ["", [{ "Ref": "ArchTagName"},"-RouteTablePublic"
+              ]]}
+          },
+          {
+            "Key": "TemplateName",
+            "Value": { "Ref": "ArchTagName"}
+          }
+        ]
+
+      }
+    },
+
+    "PublicRoute" : {
+      "Type" : "AWS::EC2::Route",
+      "DependsOn" : "igwToInternet",
+      "Properties" : {
+        "RouteTableId" : { "Ref" : "routeTablePublic" },
+        "DestinationCidrBlock" : "0.0.0.0/0",
+        "GatewayId" : { "Ref" : "igw" }
+      }
+    },
+
+    "routeTableToSubnetPublic1" : {
+   		"Type" : "AWS::EC2::SubnetRouteTableAssociation",
+	    "Properties" : {
+      		"RouteTableId" : { "Ref" : "routeTablePublic" },
+      		"SubnetId" : {"Ref" : "subnetPublic1"}
+      		}
+	},
+
+	  "routeTableToSubnetPublic2" : {
+   		"Type" : "AWS::EC2::SubnetRouteTableAssociation",
+	    "Properties" : {
+      		"RouteTableId" : { "Ref" : "routeTablePublic" },
+      		"SubnetId" : {"Ref" : "subnetPublic2"}
+      		}
+	},
+
+     "routeTablePrivate" : {
+      "Type" : "AWS::EC2::RouteTable",
+      "Properties" : {
+        "VpcId" : { "Ref" : "vpcNGF" },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {"Fn::Join" : ["", [{ "Ref": "ArchTagName"},"-RouteTablePrivate"
+              ]]}
+          },
+          {
+            "Key": "TemplateName",
+            "Value": { "Ref": "ArchTagName"}
+          }
+        ]
+      }
+    },
+
+
+
+  "routeTableToSubnetPrivate1" : {
+   		"Type" : "AWS::EC2::SubnetRouteTableAssociation",
+
+	    "Properties" : {
+      		"RouteTableId" : { "Ref" : "routeTablePrivate" },
+      		"SubnetId" : {"Ref" : "subnetPrivate1"}
+      		}
+	},
+
+	  "routeTableToSubnetPrivate2" : {
+   		"Type" : "AWS::EC2::SubnetRouteTableAssociation",
+
+	    "Properties" : {
+      		"RouteTableId" : { "Ref" : "routeTablePrivate" },
+      		"SubnetId" : {"Ref" : "subnetPrivate2"}
+      		}
+	},
+  
+  "S3Endpoint" : {
+      "Type" : "AWS::EC2::VPCEndpoint",
+      "Properties" : {
+        "PolicyDocument" : {
+            "Statement": [
+                {
+                  "Action": "*",
+                  "Effect": "Allow",
+                  "Resource": "*",
+                  "Principal": "*"
+                }
+              ]
+      },
+        "RouteTableIds" : [ {"Ref" : "routeTablePublic"}, {"Ref" : "routeTablePrivate"} ],
+        "ServiceName" : { "Fn::Join": [ "", [ "com.amazonaws.", { "Ref": "AWS::Region" }, ".s3" ] ] },
+        "VpcId" : {"Ref" : "vpcNGF"}
+      }
+    }
+
+
+
+ },
+
+ "Outputs" : {
+    "VPC":
+    {
+      "Value" : {"Ref" : "vpcNGF"}
+    },
+    "PublicSubnet1":
+    {
+      "Value" : {"Ref" : "subnetPublic1"}
+    },
+    "PublicSubnet2":
+    {
+      "Value" : {"Ref" : "subnetPublic2"}
+    },
+    "PrivateSubnet1":
+    {
+      "Value" : {"Ref" : "subnetPrivate1"}
+    },
+    "PrivateSubnet2":
+    {
+      "Value" : {"Ref" : "subnetPrivate2"}
+    },
+    "PrivateRouteTable":
+    {
+      "Value" : {"Ref" : "routeTablePrivate"}
+    },
+    "PublicRouteTable":
+    {
+      "Value" : {"Ref" : "routeTablePublic"}
+    }
+
+
+
+
+  }
+
+
+ }

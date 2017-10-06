@@ -1,0 +1,92 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+   "Description" : "Barracuda NextGen Firewall Demo Lab VPC",
+
+  "Parameters" : {
+
+
+   "ArchTagName" : {
+    	"Type" : "String",
+    	"Default" : "DemoLabVPC",
+    	"Description" : "Enter the Modifier prepended to resources of this template"
+    	}
+  },
+
+
+  "Resources": {
+
+    "HAStackNGF1":{
+          "Type" : "AWS::CloudFormation::Stack",
+        	       "Properties" : {
+        	           "TemplateURL" : "https://s3-eu-west-1.amazonaws.com/campustemplates/managed-generic.json",
+        	           "Parameters" : {
+                       "LicenceMode": "PAYG",
+                       "InstanceType": "t2.small",
+                       "IAMProfile": "NextGenFirewallRole",
+                       "CCIPAddress": "10.100.1.10",
+                       "CCUser": "root",
+                       "CCPassword": "Ziosch17$",
+                       "CCCluster": "Frankfurt",
+                       "CCRange": "1",
+                       "CCBoxname": "HQ-NGF1",
+                       "PrivateIpAddress": "10.100.0.10",
+                       "VPCId": "vpc-7f2a6e18",
+                       "SubnetId": "subnet-3b21525c"
+        	           },
+                     "TimeoutInMinutes" : "10"
+                }
+              },
+
+              "HAStackNGF2":{
+                    "Type" : "AWS::CloudFormation::Stack",
+                           "Properties" : {
+                               "TemplateURL" : "https://s3-eu-west-1.amazonaws.com/campustemplates/managed-generic.json",
+                               "Parameters" : {
+                                 "LicenceMode": "PAYG",
+                                 "InstanceType": "t2.small",
+                                 "IAMProfile": "NextGenFirewallRole",
+                                 "CCIPAddress": "10.100.1.10",
+                                 "CCUser": "root",
+                                 "CCPassword": "Ziosch17$",
+                                 "CCCluster": "Frankfurt",
+                                 "CCRange": "1",
+                                 "CCBoxname": "HQ-NGF2",
+                                 "PrivateIpAddress": "10.100.10.10",
+                                 "VPCId": "vpc-7f2a6e18",
+                                 "SubnetId": "subnet-f3007aba"
+                               }
+                          }
+                        },
+
+                        "EIPHANGF1":{
+                              "Type" : "AWS::CloudFormation::Stack",
+                              "DependsOn" :"HAStackNGF1",
+                                     "Properties" : {
+                                         "TemplateURL" : "https://s3-eu-west-1.amazonaws.com/campustemplates/associateEIP.json",
+                                         "Parameters" : {
+                                           "EIPaddressId" : "eipalloc-07d2eb3d",
+                                           "instanceId" :  { "Fn::GetAtt" : [ "HAStackNGF1", "Outputs.instanceId" ] }
+                                         }
+                                    }
+                                  },
+
+
+                        "EIPHANGF2":{
+                              "Type" : "AWS::CloudFormation::Stack",
+                               "DependsOn" : "HAStackNGF2",
+                              "Properties" : {
+                                   "TemplateURL" : "https://s3-eu-west-1.amazonaws.com/campustemplates/associateEIP.json",
+                                   "Parameters" : {
+                                   "EIPaddressId" : "eipalloc-94d5ecae",
+                                   "instanceId" :  { "Fn::GetAtt" : [ "HAStackNGF2", "Outputs.instanceId" ] }
+                                         }
+                                    }
+                                  }
+
+ },
+
+ "Outputs" : {
+  }
+
+
+ }

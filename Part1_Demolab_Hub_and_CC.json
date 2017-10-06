@@ -1,0 +1,62 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+   "Description" : "Barracuda NextGen Firewall Demo Lab VPC",
+
+  "Parameters" : {
+
+
+   "ArchTagName" : {
+    	"Type" : "String",
+    	"Default" : "DemoLabVPC",
+    	"Description" : "Enter the Modifier prepended to resources of this template"
+    	}
+  },
+
+
+  "Resources": {
+
+  "HubVPCStack":{
+    "Type" : "AWS::CloudFormation::Stack",
+  	       "Properties" : {
+  	           "TemplateURL" : "https://s3-eu-west-1.amazonaws.com/campustemplates/VPC-only.json",
+  	           "Parameters" : {
+  	               "ArchTagName" : "VPCHub",
+  	               "VPC" : "10.100.0.0/16",
+                    "PublicSubnet1" : "10.100.0.0/24",
+                    "PublicSubnet2" : "10.100.10.0/24",
+                    "PrivateSubnet1" : "10.100.1.0/24",
+                    "PrivateSubnet2" : "10.100.2.0/24"
+  	           }
+          }
+        },
+
+    "ControlCenterStack":{
+          "DependsOn" : "HubVPCStack",
+          "Type" : "AWS::CloudFormation::Stack",
+        	       "Properties" : {
+        	           "TemplateURL" : "https://s3-eu-west-1.amazonaws.com/campustemplates/ControlCenter.json",
+        	           "Parameters" : {
+        	             "KeyName" : "MZ_keys",
+                       "ArchTagName" : "ControlCenter",
+                       "DemoLabVPC" : { "Fn::GetAtt" : [ "HubVPCStack", "Outputs.VPC" ] },
+                        "Subnet" : { "Fn::GetAtt" : [ "HubVPCStack", "Outputs.PrivateSubnet1" ] },
+                        "IAMRole" : "NextGenFirewallRole",
+                        "PrivateRouteTableID" : { "Fn::GetAtt" : [ "HubVPCStack", "Outputs.PrivateRouteTable" ] },
+                        "PublicRouteTableID" : { "Fn::GetAtt" : [ "HubVPCStack", "Outputs.PublicRouteTable" ] }
+        	           }
+
+                }
+              }
+
+
+ },
+
+ "Outputs" : {
+
+
+
+
+  }
+
+
+ }

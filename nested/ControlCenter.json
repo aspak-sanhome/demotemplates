@@ -1,0 +1,169 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+   "Description" : "Single NextGen Control Center in Demolab",
+
+  "Parameters" : {
+
+    "KeyName" : {
+      "Description" : "Name of an existing EC2 KeyPair to enable SSH access to the instances",
+      "Type" : "AWS::EC2::KeyPair::KeyName",
+      "ConstraintDescription" : "Must be the name of an existing EC2 KeyPair."
+
+    },
+
+   "ArchTagName" : {
+    	"Type" : "String",
+    	"Default" : "NextGenControlCenter",
+    	"Description" : "This modifier is prepended to all resources deployed by this template."
+    },
+
+    "DemoLabVPC" : {
+       "Type" : "AWS::EC2::VPC::Id",
+       "Default" : "",
+       "Description" : "Select the VPC for the Demolab"
+     },
+
+     "Subnet" : {
+        "Type" : "AWS::EC2::Subnet::Id",
+        "Default" : "",
+        "Description" : "Select the Subnet for the Control Center."
+      },
+      "IAMRole" : {
+         "Type" : "String",
+         "Default" : "NextGenFirewallRole",
+         "Description" : "Select the Subnet for the Control Center."
+       },
+       "PrivateRouteTableID" : {
+         "Type" : "String",
+         "Description" : " RouteTable ID for the private table used to create VIP network routes"
+       },
+        "PublicRouteTableID" : {
+          "Type" : "String",
+          "Description" : " RouteTable ID for the public route table used to create VIP network routes"
+         }
+  },
+
+   "Mappings" : {
+
+    "AMINGCC" : {
+      "us-east-1"        : {"AMI" : ""},
+      "us-east-2"        : {"AMI" : ""},
+      "us-west-1"        : {"AMI" : ""},
+      "us-west-2"        : {"AMI" : ""},
+      "ca-central-1"     : {"AMI" : ""},
+      "eu-west-1"        : {"AMI" : "ami-8f9458f6"},
+      "eu-west-2"        : {"AMI" : ""},
+      "eu-central-1"     : {"AMI" : ""},
+      "ap-northeast-1"   : {"AMI" : ""},
+      "ap-northeast-2"   : {"AMI" : ""},
+      "ap-southeast-1"   : {"AMI" : ""},
+      "ap-southeast-2"   : {"AMI" : ""},
+      "ap-south-1"   	 : {"AMI" : ""},
+      "sa-east-1"		 : {"AMI" : ""}
+    }
+
+
+  },
+
+  "Resources": {
+
+    "securityGroupNGCC" : {
+       "Type" : "AWS::EC2::SecurityGroup",
+       "Properties" : {
+         "GroupDescription" : "Allow All Traffic.",
+         "VpcId" : { "Ref" : "DemoLabVPC" },
+          "SecurityGroupIngress" : [
+           { "IpProtocol" : "-1", "FromPort" : "-1", "ToPort" : "-1", "CidrIp" : "0.0.0.0/0"}
+            ],
+           "Tags": [
+           {
+             "Key": "Name",
+             "Value": {"Fn::Join" : ["", [{ "Ref": "ArchTagName"},"-SecurityGroup"
+               ]]}
+           },
+           {
+             "Key": "TemplateName",
+             "Value": { "Ref": "ArchTagName"}
+           }
+         ]
+       }
+
+   },
+
+
+    "instanceNGCC": {
+      "Type": "AWS::EC2::Instance",
+       "Properties": {
+        "DisableApiTermination": "false",
+        "InstanceInitiatedShutdownBehavior": "stop",
+        "ImageId": { "Fn::FindInMap" : [ "AMINGCC", { "Ref" : "AWS::Region" } , "AMI" ]},
+        "InstanceType": "t2.small",
+         "KeyName": { "Ref" : "KeyName" },
+         "Monitoring": "false",
+         "SourceDestCheck": "false",
+         "NetworkInterfaces": [
+          {
+            "DeleteOnTermination": "true",
+            "Description": {"Fn::Join" : ["", ["NIC NGCC ",{ "Ref": "ArchTagName"}
+              ]]},
+
+            "DeviceIndex": 0,
+            "SubnetId": {
+              "Ref": "Subnet"
+            },
+             "PrivateIpAddresses": [
+              {
+                "PrivateIpAddress": "10.100.1.10",
+                "Primary": "true"
+              }
+            ],
+            "GroupSet": [
+              {
+                "Ref": "securityGroupNGCC"
+              }
+            ]
+          }
+        ],
+             "Tags": [
+          {
+            "Key": "Name",
+            "Value": {"Fn::Join" : ["", [{ "Ref": "ArchTagName"},"-NextGenControlCenter"
+              ]]}
+          },
+          {
+            "Key": "TemplateName",
+            "Value": { "Ref": "ArchTagName"}
+          }
+        ],
+
+        "IamInstanceProfile" : {"Ref":"IAMRole"}
+        }
+
+    },
+
+    "EIPaddressNGCC" : {
+      "Type" : "AWS::EC2::EIP"
+    },
+
+    "IPAssoc" : {
+      "Type" : "AWS::EC2::EIPAssociation",
+      "Properties" : {
+        "InstanceId" : { "Ref" : "instanceNGCC" },
+        "EIP" : { "Ref" : "EIPaddressNGCC" }
+      }
+    }
+
+    },
+
+ "Outputs" : {
+
+ 	"NGCCPublicIP":{
+ 		"Description" : "Temporary Public IP address of the Barracuda NextGen Control Center",
+ 		"Value" : {"Fn::GetAtt" : ["instanceNGCC", "PublicIp"]}
+
+ 		}
+
+  }
+
+
+ }

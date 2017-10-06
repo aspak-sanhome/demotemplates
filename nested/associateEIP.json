@@ -1,0 +1,28 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Add Elastic IP to ",
+    "Parameters": {
+
+        "EIPaddressId" : {
+          "Description" : "ID of Elastic IP address",
+          "Type" : "String"
+        },
+        "instanceId" : {
+          "Description" : "EC2 instance where the EIP will be attached",
+           "Type" : "AWS::EC2::Instance::Id"
+        }
+
+    },
+
+    "Resources": {
+
+        "EIPAssoc" : {
+          "Type" : "AWS::EC2::EIPAssociation",
+          "Properties" : {
+            "InstanceId" :{ "Ref" : "instanceId" },
+            "AllocationId" : { "Ref" : "EIPaddressId" }
+          }
+
+        }
+    }
+}

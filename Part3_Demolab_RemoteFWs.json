@@ -1,0 +1,87 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+   "Description" : "Barracuda NextGen Firewall Demo Lab VPC",
+
+  "Parameters" : {
+
+
+   "ArchTagName" : {
+    	"Type" : "String",
+    	"Default" : "DemoLabVPC",
+    	"Description" : "Enter the Modifier prepended to resources of this template"
+    	}
+  },
+
+
+  "Resources": {
+
+  "IBKVPCStack":{
+    "Type" : "AWS::CloudFormation::Stack",
+  	       "Properties" : {
+  	           "TemplateURL" : "https://s3-eu-west-1.amazonaws.com/campustemplates/VPC-only.json",
+  	           "Parameters" : {
+  	               "ArchTagName" : "VPCHub",
+  	               "VPC" : "10.100.0.0/16",
+                    "PublicSubnet1" : "10.101.0.0/24",
+                    "PublicSubnet2" : "10.101.10.0/24",
+                    "PrivateSubnet1" : "10.101.1.0/24",
+                    "PrivateSubnet2" : "10.101.2.0/24"
+  	           }
+          }
+        },
+
+        "HAStackNGF2":{
+              "DependsOn" : "IBKVPCStack",
+              "Type" : "AWS::CloudFormation::Stack",
+                     "Properties" : {
+                         "TemplateURL" : "https://s3-eu-west-1.amazonaws.com/campustemplates/managed-generic.json",
+                         "Parameters" : {
+                           "LicenceMode": "PAYG",
+                           "InstanceType": "t2.small",
+                           "IAMProfile": "NextGenFirewallRole",
+                           "CCIPAddress": "10.100.1.10",
+                           "CCUser": "root",
+                           "CCPassword": "Ziosch17$",
+                           "CCCluster": "Frankfurt",
+                           "CCRange": "1",
+                           "CCBoxname": "HQ-NGF2",
+                           "PrivateIpAddress": "10.100.10.10",
+                           "VPCId": "vpc-7f2a6e18",
+                           "SubnetId": "subnet-f3007aba"
+                         }
+                    }
+                  },
+
+
+        
+
+    "IBKFWStack":{
+          "DependsOn" : "IBKVPCStack",
+          "Type" : "AWS::CloudFormation::Stack",
+        	       "Properties" : {
+        	           "TemplateURL" : "https://s3-eu-west-1.amazonaws.com/campustemplates/ControlCenter.json",
+        	           "Parameters" : {
+        	             "KeyName" : "MZ_keys",
+                       "ArchTagName" : "IBKFW",
+                       "DemoLabVPC" : { "Fn::GetAtt" : [ "IBKVPCStack", "Outputs.VPC" ] },
+                        "Subnet" : { "Fn::GetAtt" : [ "IBKVPCStack", "Outputs.PrivateSubnet1" ] },
+                        "IAMRole" : "NextGenFirewallRole",
+                        "PrivateRouteTableID" : { "Fn::GetAtt" : [ "IBKVPCStack", "Outputs.PrivateRouteTable" ] },
+                        "PublicRouteTableID" : { "Fn::GetAtt" : [ "IBKVPCStack", "Outputs.PublicRouteTable" ] }
+        	           }
+
+                }
+              }
+
+
+ },
+
+ "Outputs" : {
+
+
+
+
+  }
+
+
+ }
