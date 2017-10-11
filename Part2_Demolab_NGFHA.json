@@ -30,6 +30,7 @@
                        "CCRange": "1",
                        "CCBoxname": "HQ-NGF1",
                        "PrivateIpAddress": "10.100.0.10",
+                       "SecondaryPrivateIpAddress": "10.100.0.15",
                        "VPCId": "vpc-7f2a6e18",
                        "SubnetId": "subnet-3b21525c"
         	           },
@@ -52,24 +53,27 @@
                                  "CCRange": "1",
                                  "CCBoxname": "HQ-NGF2",
                                  "PrivateIpAddress": "10.100.10.10",
+                                 "SecondaryPrivateIpAddress": "10.100.10.15",
                                  "VPCId": "vpc-7f2a6e18",
                                  "SubnetId": "subnet-f3007aba"
                                }
                           }
                         },
 
-                        "EIPHANGF1":{
+                        "EIPtoHANGF1":{
                               "Type" : "AWS::CloudFormation::Stack",
                               "DependsOn" :"HAStackNGF1",
                                      "Properties" : {
                                          "TemplateURL" : "https://s3-eu-west-1.amazonaws.com/campustemplates/associateEIP.json",
                                          "Parameters" : {
-                                           "EIPaddressId" : "eipalloc-07d2eb3d",
-                                           "instanceId" :  { "Fn::GetAtt" : [ "HAStackNGF1", "Outputs.instanceId" ] }
+                                           "EIPaddressIdPrimary" : "eipalloc-07d2eb3d",
+                                           "EIPaddressIdSecondary" : "eipalloc-b1cdca8b",
+                                           "instanceId" :  { "Fn::GetAtt" : [ "HAStackNGF1", "Outputs.instanceId" ] },
+                                           "PrimaryPrivateIPAddress" : "10.100.0.10",
+                                           "SecondaryPrivateIpAddress" : "10.100.0.15"
                                          }
                                     }
                                   },
-
 
                         "EIPHANGF2":{
                               "Type" : "AWS::CloudFormation::Stack",
@@ -77,8 +81,11 @@
                               "Properties" : {
                                    "TemplateURL" : "https://s3-eu-west-1.amazonaws.com/campustemplates/associateEIP.json",
                                    "Parameters" : {
-                                   "EIPaddressId" : "eipalloc-94d5ecae",
-                                   "instanceId" :  { "Fn::GetAtt" : [ "HAStackNGF2", "Outputs.instanceId" ] }
+                                   "EIPaddressIdPrimary" : "eipalloc-94d5ecae",
+                                   "EIPaddressIdSecondary" : "eipalloc-a2cacd98",
+                                   "instanceId" :  { "Fn::GetAtt" : [ "HAStackNGF2", "Outputs.instanceId" ] },
+                                   "PrimaryPrivateIPAddress" : "10.100.10.10",
+                                   "SecondaryPrivateIpAddress" : "10.100.10.15"
                                          }
                                     }
                                   }

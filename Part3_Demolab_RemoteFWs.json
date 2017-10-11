@@ -21,7 +21,7 @@
   	           "TemplateURL" : "https://s3-eu-west-1.amazonaws.com/campustemplates/VPC-only.json",
   	           "Parameters" : {
   	               "ArchTagName" : "VPCHub",
-  	               "VPC" : "10.100.0.0/16",
+  	               "VPC" : "10.101.0.0/16",
                     "PublicSubnet1" : "10.101.0.0/24",
                     "PublicSubnet2" : "10.101.10.0/24",
                     "PrivateSubnet1" : "10.101.1.0/24",
@@ -30,7 +30,7 @@
           }
         },
 
-        "HAStackNGF2":{
+        "IBKFWstack":{
               "DependsOn" : "IBKVPCStack",
               "Type" : "AWS::CloudFormation::Stack",
                      "Properties" : {
@@ -39,41 +39,33 @@
                            "LicenceMode": "PAYG",
                            "InstanceType": "t2.small",
                            "IAMProfile": "NextGenFirewallRole",
-                           "CCIPAddress": "10.100.1.10",
+                           "CCIPAddress": "34.240.249.28",
                            "CCUser": "root",
                            "CCPassword": "Ziosch17$",
-                           "CCCluster": "Frankfurt",
-                           "CCRange": "1",
-                           "CCBoxname": "HQ-NGF2",
-                           "PrivateIpAddress": "10.100.10.10",
-                           "VPCId": "vpc-7f2a6e18",
-                           "SubnetId": "subnet-f3007aba"
+                           "CCCluster": "Innsbruck",
+                           "CCRange": "2",
+                           "CCBoxname": "Innsbruck",
+                           "PrivateIpAddress": "10.101.0.10",
+                           "SecondaryPrivateIpAddress" : "10.101.0.15",
+                           "VPCId": { "Fn::GetAtt" : [ "IBKVPCStack", "Outputs.VPC" ] },
+                           "SubnetId": { "Fn::GetAtt" : [ "IBKVPCStack", "Outputs.PublicSubnet1" ] }
                          }
                     }
                   },
-
-
-        
-
-    "IBKFWStack":{
-          "DependsOn" : "IBKVPCStack",
-          "Type" : "AWS::CloudFormation::Stack",
-        	       "Properties" : {
-        	           "TemplateURL" : "https://s3-eu-west-1.amazonaws.com/campustemplates/ControlCenter.json",
-        	           "Parameters" : {
-        	             "KeyName" : "MZ_keys",
-                       "ArchTagName" : "IBKFW",
-                       "DemoLabVPC" : { "Fn::GetAtt" : [ "IBKVPCStack", "Outputs.VPC" ] },
-                        "Subnet" : { "Fn::GetAtt" : [ "IBKVPCStack", "Outputs.PrivateSubnet1" ] },
-                        "IAMRole" : "NextGenFirewallRole",
-                        "PrivateRouteTableID" : { "Fn::GetAtt" : [ "IBKVPCStack", "Outputs.PrivateRouteTable" ] },
-                        "PublicRouteTableID" : { "Fn::GetAtt" : [ "IBKVPCStack", "Outputs.PublicRouteTable" ] }
-        	           }
-
-                }
-              }
-
-
+                  "EIP1IBK":{
+                                "Type" : "AWS::CloudFormation::Stack",
+                                 "DependsOn" : "IBKFWstack",
+                                "Properties" : {
+                                     "TemplateURL" : "https://s3-eu-west-1.amazonaws.com/campustemplates/associateEIP.json",
+                                     "Parameters" : {
+                                     "EIPaddressIdPrimary" : "eipalloc-0ccacd36",
+                                     "EIPaddressIdSecondary" : "eipalloc-cdcacdf7",
+                                     "instanceId" :  { "Fn::GetAtt" : [ "IBKFWstack", "Outputs.instanceId" ] },
+                                     "PrimaryPrivateIPAddress" : "10.101.0.10",
+                                     "SecondaryPrivateIpAddress" : "10.101.0.15"
+                                           }
+                                      }
+                    }
  },
 
  "Outputs" : {

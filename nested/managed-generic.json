@@ -219,22 +219,6 @@
         }
     },
     "Conditions": {
-        "NoBoxPrivateIp": {
-            "Fn::Equals": [
-                {
-                    "Ref": "PrivateIpAddress"
-                },
-                ""
-            ]
-        },
-        "NoSecondaryBoxPrivateIp": {
-            "Fn::Equals": [
-                {
-                    "Ref": "SecondaryPrivateIpAddress"
-                },
-                ""
-            ]
-        },
         "SharedKeyAuth": {
           "Fn::Equals": [
             {
@@ -277,17 +261,16 @@
                         "AssociatePublicIpAddress": "true",
                         "DeleteOnTermination": "true",
                         "DeviceIndex": "0",
-                        "PrivateIpAddress": {
-                            "Fn::If": [
-                                "NoBoxPrivateIp",
-                                {
-                                    "Ref": "AWS::NoValue"
-                                },
-                                {
-                                    "Ref": "PrivateIpAddress"
-                                }
-                            ]
-                        },
+                        "PrivateIpAddresses": [
+                          {
+                            "PrivateIpAddress" : { "Ref": "PrivateIpAddress"},
+                            "Primary" : true
+                          },
+                          {
+                            "PrivateIpAddress" : {"Ref" : "SecondaryPrivateIpAddress"},
+                            "Primary" : false
+                          }
+                            ],
                         "SubnetId": {
                             "Ref": "SubnetId"
                         }

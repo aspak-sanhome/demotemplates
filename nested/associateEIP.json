@@ -1,28 +1,47 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
-    "Description": "Add Elastic IP to ",
+    "Description": "Add Elastic IP to an NGF",
     "Parameters": {
 
-        "EIPaddressId" : {
+        "EIPaddressIdPrimary" : {
+          "Description" : "ID of Elastic IP address",
+          "Type" : "String"
+        },
+        "EIPaddressIdSecondary" : {
           "Description" : "ID of Elastic IP address",
           "Type" : "String"
         },
         "instanceId" : {
           "Description" : "EC2 instance where the EIP will be attached",
            "Type" : "AWS::EC2::Instance::Id"
+        },
+        "PrimaryPrivateIPAddress" : {
+          "Description" : "Primary Private IP where the EIP will be attached",
+           "Type" : "String"
+        },
+        "SecondaryPrivateIpAddress" : {
+          "Description" : "Secondary Private IP where the EIP will be attached",
+           "Type" : "String"
         }
-
     },
 
     "Resources": {
 
-        "EIPAssoc" : {
+        "EIPAssocPrimary" : {
           "Type" : "AWS::EC2::EIPAssociation",
           "Properties" : {
             "InstanceId" :{ "Ref" : "instanceId" },
-            "AllocationId" : { "Ref" : "EIPaddressId" }
-          }
-
+            "AllocationId" : { "Ref" : "EIPaddressIdPrimary" },
+            "PrivateIpAddress" : {"Ref" : "PrimaryPrivateIPAddress"}
+            }
+          },
+          "EIPAssocSecondary" : {
+            "Type" : "AWS::EC2::EIPAssociation",
+            "Properties" : {
+              "InstanceId" :{ "Ref" : "instanceId" },
+              "AllocationId" : { "Ref" : "EIPaddressIdSecondary" },
+              "PrivateIpAddress" : {"Ref" : "SecondaryPrivateIpAddress"}
+            }
         }
     }
 }
