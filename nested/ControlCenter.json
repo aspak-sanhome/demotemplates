@@ -46,7 +46,7 @@
    "Mappings" : {
 
     "AMINGCC" : {
-      "us-east-1"        : {"AMI" : ""},
+      "us-east-1"        : {"AMI" : "ami-83ac9df8"},
       "us-east-2"        : {"AMI" : ""},
       "us-west-1"        : {"AMI" : ""},
       "us-west-2"        : {"AMI" : ""},
