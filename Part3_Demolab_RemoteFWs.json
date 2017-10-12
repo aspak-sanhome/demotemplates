@@ -7,65 +7,50 @@
 
    "ArchTagName" : {
     	"Type" : "String",
-    	"Default" : "DemoLabVPC",
+    	"Default" : "DemoLabRemoteFWs",
     	"Description" : "Enter the Modifier prepended to resources of this template"
-    	}
+    },
+    "CCPointOfEntry" :
+    {
+      "Type" : "String",
+    	"Default" : "34.240.249.28",
+    	"Description" : "Enter the Modifier prepended to resources of this template"
+    },
+    "KeyName" : {
+      "Description" : "Name of an existing EC2 KeyPair to enable SSH access to the instances",
+      "Type" : "AWS::EC2::KeyPair::KeyName",
+      "ConstraintDescription" : "Must be the name of an existing EC2 KeyPair.",
+      "Default" : "MZ_keys"
+    }
   },
 
 
   "Resources": {
 
-  "IBKVPCStack":{
-    "Type" : "AWS::CloudFormation::Stack",
-  	       "Properties" : {
-  	           "TemplateURL" : "https://s3-eu-west-1.amazonaws.com/campustemplates/VPC-only.json",
-  	           "Parameters" : {
-  	               "ArchTagName" : "VPCHub",
-  	               "VPC" : "10.101.0.0/16",
-                    "PublicSubnet1" : "10.101.0.0/24",
-                    "PublicSubnet2" : "10.101.10.0/24",
-                    "PrivateSubnet1" : "10.101.1.0/24",
-                    "PrivateSubnet2" : "10.101.2.0/24"
-  	           }
-          }
-        },
-
-        "IBKFWstack":{
-              "DependsOn" : "IBKVPCStack",
+        "IBKstack":{
               "Type" : "AWS::CloudFormation::Stack",
                      "Properties" : {
-                         "TemplateURL" : "https://s3-eu-west-1.amazonaws.com/campustemplates/managed-generic.json",
+                         "TemplateURL" : "https://s3-eu-west-1.amazonaws.com/campustemplates/nested/remoteFW.json",
                          "Parameters" : {
-                           "LicenceMode": "PAYG",
-                           "InstanceType": "t2.small",
-                           "IAMProfile": "NextGenFirewallRole",
-                           "CCIPAddress": "34.240.249.28",
-                           "CCUser": "root",
-                           "CCPassword": "Ziosch17$",
-                           "CCCluster": "Innsbruck",
-                           "CCRange": "2",
-                           "CCBoxname": "Innsbruck",
-                           "PrivateIpAddress": "10.101.0.10",
-                           "SecondaryPrivateIpAddress" : "10.101.0.15",
-                           "VPCId": { "Fn::GetAtt" : [ "IBKVPCStack", "Outputs.VPC" ] },
-                           "SubnetId": { "Fn::GetAtt" : [ "IBKVPCStack", "Outputs.PublicSubnet1" ] }
+                           "ArchTagName" : "Innsbruck",
+                            "VPC" : "10.101.0.0/16",
+                            "PublicSubnet1" : "10.101.0.0/24",
+                            "PublicSubnet2" : "10.101.10.0/24",
+                            "PrivateSubnet1" : "10.101.1.0/24",
+                            "PrivateSubnet2" : "10.101.2.0/24",
+                            "EIPaddressIdPrimary" : "eipalloc-0ccacd36",
+                            "EIPaddressIdSecondary" : "eipalloc-cdcacdf7",
+                            "PrimaryPrivateIPAddress": "10.101.0.10",
+                            "SecondaryPrivateIpAddress" : "10.101.0.15",
+                            "KeyName" : {"Ref" : "KeyName"},
+                            "CCPointOfEntry": {"Ref" : "CCPointOfEntry"},
+                            "CCCluster": "Innsbruck",
+                            "CCRange": "2",
+                            "CCBoxname": "Innsbruck"
                          }
                     }
-                  },
-                  "EIP1IBK":{
-                                "Type" : "AWS::CloudFormation::Stack",
-                                 "DependsOn" : "IBKFWstack",
-                                "Properties" : {
-                                     "TemplateURL" : "https://s3-eu-west-1.amazonaws.com/campustemplates/associateEIP.json",
-                                     "Parameters" : {
-                                     "EIPaddressIdPrimary" : "eipalloc-0ccacd36",
-                                     "EIPaddressIdSecondary" : "eipalloc-cdcacdf7",
-                                     "instanceId" :  { "Fn::GetAtt" : [ "IBKFWstack", "Outputs.instanceId" ] },
-                                     "PrimaryPrivateIPAddress" : "10.101.0.10",
-                                     "SecondaryPrivateIpAddress" : "10.101.0.15"
-                                           }
-                                      }
-                    }
+                  }
+
  },
 
  "Outputs" : {

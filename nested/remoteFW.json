@@ -1,0 +1,136 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+   "Description" : "Barracuda NextGen Firewall Demo Lab VPC",
+
+  "Parameters" : {
+   "ArchTagName" : {
+    	"Type" : "String",
+    	"Description" : "Enter the Modifier prepended to resources of this template"
+    },
+    "CCPointOfEntry" :
+    {
+      "Type" : "String"
+    },
+    "KeyName" : {
+      "Description" : "Name of an existing EC2 KeyPair to enable SSH access to the instances",
+      "Type" : "AWS::EC2::KeyPair::KeyName",
+      "ConstraintDescription" : "Must be the name of an existing EC2 KeyPair."
+    },
+    "VPC" :{
+    "Type" : "String",
+    "Description" : "CIDR range for Hub VPC"
+  },
+    "PublicSubnet1" :{
+    "Type" : "String",
+    "Description" : "Public Subnet1"
+  },
+  "PublicSubnet2" :{
+    "Type" : "String",
+    "Description" : "Public Subnet1"
+  },
+  "PrivateSubnet1" :{
+    "Type" : "String",
+    "Description" : "Public Subnet1"
+  },
+  "PrivateSubnet2" :{
+    "Type" : "String",
+    "Description" : "Public Subnet1"
+  },
+  "EIPaddressIdPrimary" : {
+      "Description" : "ID of Elastic IP address",
+      "Type" : "String"
+    },
+    "EIPaddressIdSecondary" : {
+      "Description" : "ID of Elastic IP address",
+      "Type" : "String"
+    },
+    "PrimaryPrivateIPAddress" : {
+      "Description" : "Primary Private IP where the EIP will be attached",
+       "Type" : "String"
+    },
+    "SecondaryPrivateIpAddress" : {
+      "Description" : "Secondary Private IP where the EIP will be attached",
+       "Type" : "String"
+    },
+    "CCCluster": {
+          "Description": "Name of the Cluster on the CC",
+          "Type": "String"
+      },
+      "CCRange": {
+          "Description": "Name of the Range on the CC",
+          "Type": "Number",
+          "Default": "1"
+      },
+      "CCBoxname": {
+          "Description": "Name of the Box on the CC",
+          "Type": "String"
+      }
+
+  },
+
+
+  "Resources": {
+
+  "RemoteFWVPCStack":{
+    "Type" : "AWS::CloudFormation::Stack",
+  	       "Properties" : {
+  	           "TemplateURL" : "https://s3-eu-west-1.amazonaws.com/campustemplates/nested/VPC-only.json",
+  	           "Parameters" : {
+  	               "ArchTagName" : {"Ref" : "ArchTagName"},
+  	               "VPC" : {"Ref" : "VPC"},
+                    "PublicSubnet1" : {"Ref" : "PublicSubnet1"},
+                    "PublicSubnet2" : {"Ref" : "PublicSubnet2"},
+                    "PrivateSubnet1" : {"Ref" : "PrivateSubnet1"},
+                    "PrivateSubnet2" : {"Ref" : "PrivateSubnet2"}
+  	           }
+          }
+        },
+
+        "RemoteFWstack":{
+              "DependsOn" : "RemoteFWVPCStack",
+              "Type" : "AWS::CloudFormation::Stack",
+                     "Properties" : {
+                         "TemplateURL" : "https://s3-eu-west-1.amazonaws.com/campustemplates/nested/managed-generic.json",
+                         "Parameters" : {
+                           "LicenceMode": "PAYG",
+                           "InstanceType": "t2.small",
+                           "KeyName" : {"Ref" : "KeyName"},
+                           "IAMProfile": "NextGenFirewallRole",
+                           "CCIPAddress": {"Ref" : "CCPointOfEntry"},
+                           "CCUser": "root",
+                           "CCPassword": "Ziosch17$",
+                           "CCCluster": {"Ref" : "CCCluster"},
+                           "CCRange": {"Ref" : "CCRange"},
+                           "CCBoxname": {"Ref" : "CCBoxname"},
+                           "PrivateIpAddress": {"Ref" : "PrimaryPrivateIPAddress"},
+                           "SecondaryPrivateIpAddress" : {"Ref" : "SecondaryPrivateIpAddress"},
+                           "VPCId": { "Fn::GetAtt" : [ "RemoteFWVPCStack", "Outputs.VPC" ] },
+                           "SubnetId": { "Fn::GetAtt" : [ "RemoteFWVPCStack", "Outputs.PublicSubnet1" ] }
+                         }
+                    }
+                  },
+                  "EIPIBK":{
+                        "Type" : "AWS::CloudFormation::Stack",
+                        "DependsOn" : "RemoteFWstack",
+                        "Properties" : {
+                           "TemplateURL" : "https://s3-eu-west-1.amazonaws.com/campustemplates/nested/associateEIP.json",
+                           "Parameters" : {
+                             "EIPaddressIdPrimary" : {"Ref" : "EIPaddressIdPrimary"},
+                             "EIPaddressIdSecondary" : {"Ref" : "EIPaddressIdSecondary"},
+                             "instanceId" :  { "Fn::GetAtt" : [ "RemoteFWstack", "Outputs.instanceId" ] },
+                             "PrimaryPrivateIPAddress" : {"Ref" : "PrimaryPrivateIPAddress"},
+                             "SecondaryPrivateIpAddress" : {"Ref" : "SecondaryPrivateIpAddress"}
+                           }
+                       }
+                    }
+ },
+
+ "Outputs" : {
+
+
+
+
+  }
+
+
+ }

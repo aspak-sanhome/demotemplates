@@ -11,6 +11,7 @@
                 "Parameters" : [
                     "InstanceType",
                     "LicenceMode",
+                    "KeyName",
                     "PrivateIpAddress",
                     "SecondaryPrivateIpAddress",
                     "VPCId",
@@ -38,6 +39,9 @@
               },
               "LicenceMode": {
                 "default": "License Mode"
+              },
+                "KeyName" : {
+                  "default" : "Existing key name"
               },
               "PrivateIpAddress": {
                 "default": "Private IP Address"
@@ -76,6 +80,11 @@
         }
     },
     "Parameters": {
+      "KeyName" : {
+        "Description" : "Name of an existing EC2 KeyPair to enable SSH access to the instances",
+        "Type" : "AWS::EC2::KeyPair::KeyName",
+        "ConstraintDescription" : "Must be the name of an existing EC2 KeyPair."
+      },
         "LicenceMode": {
             "Description": "License Type",
             "Type": "String",
@@ -252,6 +261,7 @@
                 "InstanceType": {
                     "Ref": "InstanceType"
                   },
+                "KeyName": { "Ref" : "KeyName" },
                 "IamInstanceProfile": {
                     "Ref": "IAMProfile"
                   },

@@ -9,7 +9,13 @@
     	"Type" : "String",
     	"Default" : "DemoLabVPC",
     	"Description" : "Enter the Modifier prepended to resources of this template"
-    	}
+    },
+    "KeyName" : {
+      "Description" : "Name of an existing EC2 KeyPair to enable SSH access to the instances",
+      "Type" : "AWS::EC2::KeyPair::KeyName",
+      "ConstraintDescription" : "Must be the name of an existing EC2 KeyPair.",
+      "Default" : "MZ_keys"
+    }
   },
 
 
@@ -18,7 +24,7 @@
   "HubVPCStack":{
     "Type" : "AWS::CloudFormation::Stack",
   	       "Properties" : {
-  	           "TemplateURL" : "https://s3-eu-west-1.amazonaws.com/campustemplates/VPC-only.json",
+  	           "TemplateURL" : "https://s3-eu-west-1.amazonaws.com/campustemplates/nested/VPC-only.json",
   	           "Parameters" : {
   	               "ArchTagName" : "VPCHub",
   	               "VPC" : "10.100.0.0/16",
@@ -36,7 +42,7 @@
         	       "Properties" : {
         	           "TemplateURL" : "https://s3-eu-west-1.amazonaws.com/campustemplates/ControlCenter.json",
         	           "Parameters" : {
-        	             "KeyName" : "MZ_keys",
+        	             "KeyName" : {"Ref" : "KeyName"},
                        "ArchTagName" : "ControlCenter",
                        "DemoLabVPC" : { "Fn::GetAtt" : [ "HubVPCStack", "Outputs.VPC" ] },
                         "Subnet" : { "Fn::GetAtt" : [ "HubVPCStack", "Outputs.PrivateSubnet1" ] },
