@@ -1,0 +1,55 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Add Elastic IP to an NGF",
+    "Parameters": {
+
+        "NGFinstanceId" : {
+          "Description" : "EC2 instance where the EIP will be attached",
+           "Type" : "AWS::EC2::Instance::Id"
+        },
+        "NGCCinstanceId" : {
+          "Description" : "EC2 instance where the EIP will be attached",
+           "Type" : "AWS::EC2::Instance::Id"
+        },
+
+        "PrivateRouteTableID" : {
+          "Type" : "String",
+          "Description" : " RouteTable ID for the private table used to create VIP network routes"
+        },
+         "PublicRouteTableID" : {
+           "Type" : "String",
+           "Description" : " RouteTable ID for the public route table used to create VIP network routes"
+         }
+    },
+
+    "Resources": {
+
+      "DefaultRoute" : {
+        "Type" : "AWS::EC2::Route",
+        "Properties" : {
+          "RouteTableId" : { "Ref" : "PrivateRouteTableID" },
+          "DestinationCidrBlock" : "0.0.0.0/0",
+          "InstanceId" : {"Ref" : "NGFinstanceId"}
+        }
+      },
+        "VIPRoutePublic" : {
+          "Type" : "AWS::EC2::Route",
+          "Properties" : {
+            "RouteTableId" : { "Ref" : "PrivateRouteTableID" },
+            "DestinationCidrBlock" : "10.100.253.0/24",
+            "InstanceId" : {"Ref" : "NGCCinstanceId"}
+          }
+        },
+          "VIPRoutePrivate" : {
+            "Type" : "AWS::EC2::Route",
+            "Properties" : {
+              "RouteTableId" : { "Ref" : "PublicRouteTableID" },
+              "DestinationCidrBlock" : "10.100.253.0/24",
+              "InstanceId" : {"Ref" : "NGCCinstanceId"}
+            }
+      }
+
+
+        }
+
+}

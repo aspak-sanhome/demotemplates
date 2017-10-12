@@ -74,7 +74,7 @@
   "RemoteFWVPCStack":{
     "Type" : "AWS::CloudFormation::Stack",
   	       "Properties" : {
-  	           "TemplateURL" : "https://s3-eu-west-1.amazonaws.com/campustemplates/nested/VPC-only.json",
+  	           "TemplateURL" : "https://s3.amazonaws.com/ngfdemolabtemplates/nested/VPC-only.json",
   	           "Parameters" : {
   	               "ArchTagName" : {"Ref" : "ArchTagName"},
   	               "VPC" : {"Ref" : "VPC"},
@@ -90,7 +90,7 @@
               "DependsOn" : "RemoteFWVPCStack",
               "Type" : "AWS::CloudFormation::Stack",
                      "Properties" : {
-                         "TemplateURL" : "https://s3-eu-west-1.amazonaws.com/campustemplates/nested/managed-generic.json",
+                         "TemplateURL" : "https://s3.amazonaws.com/ngfdemolabtemplates/nested/managed-generic.json",
                          "Parameters" : {
                            "LicenceMode": "PAYG",
                            "InstanceType": "t2.small",
@@ -113,7 +113,7 @@
                         "Type" : "AWS::CloudFormation::Stack",
                         "DependsOn" : "RemoteFWstack",
                         "Properties" : {
-                           "TemplateURL" : "https://s3-eu-west-1.amazonaws.com/campustemplates/nested/associateEIP.json",
+                           "TemplateURL" : "https://s3.amazonaws.com/ngfdemolabtemplates/nested/associateEIP.json",
                            "Parameters" : {
                              "EIPaddressIdPrimary" : {"Ref" : "EIPaddressIdPrimary"},
                              "EIPaddressIdSecondary" : {"Ref" : "EIPaddressIdSecondary"},

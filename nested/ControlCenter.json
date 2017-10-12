@@ -33,20 +33,16 @@
          "Default" : "NextGenFirewallRole",
          "Description" : "Select the Subnet for the Control Center."
        },
-       "PrivateRouteTableID" : {
-         "Type" : "String",
-         "Description" : " RouteTable ID for the private table used to create VIP network routes"
-       },
-        "PublicRouteTableID" : {
-          "Type" : "String",
-          "Description" : " RouteTable ID for the public route table used to create VIP network routes"
-         }
+        "EIPaddressNGCC" :{
+          "Type" :"String",
+          "Description": "EIP for CC"
+        }
   },
 
    "Mappings" : {
 
     "AMINGCC" : {
-      "us-east-1"        : {"AMI" : "ami-83ac9df8"},
+      "us-east-1"        : {"AMI" : "ami-f05f9b8a"},
       "us-east-2"        : {"AMI" : ""},
       "us-west-1"        : {"AMI" : ""},
       "us-west-2"        : {"AMI" : ""},
@@ -97,7 +93,7 @@
         "DisableApiTermination": "false",
         "InstanceInitiatedShutdownBehavior": "stop",
         "ImageId": { "Fn::FindInMap" : [ "AMINGCC", { "Ref" : "AWS::Region" } , "AMI" ]},
-        "InstanceType": "t2.small",
+        "InstanceType": "t2.large",
          "KeyName": { "Ref" : "KeyName" },
          "Monitoring": "false",
          "SourceDestCheck": "false",
@@ -141,15 +137,12 @@
 
     },
 
-    "EIPaddressNGCC" : {
-      "Type" : "AWS::EC2::EIP"
-    },
 
     "IPAssoc" : {
       "Type" : "AWS::EC2::EIPAssociation",
       "Properties" : {
         "InstanceId" : { "Ref" : "instanceNGCC" },
-        "EIP" : { "Ref" : "EIPaddressNGCC" }
+          "AllocationId" : { "Ref" : "EIPaddressNGCC" }
       }
     }
 

@@ -24,7 +24,7 @@
   "HubVPCStack":{
     "Type" : "AWS::CloudFormation::Stack",
   	       "Properties" : {
-  	           "TemplateURL" : "https://s3-eu-west-1.amazonaws.com/campustemplates/nested/VPC-only.json",
+  	           "TemplateURL" : "https://s3.amazonaws.com/ngfdemolabtemplates/nested/VPC-only.json",
   	           "Parameters" : {
   	               "ArchTagName" : "VPCHub",
   	               "VPC" : "10.100.0.0/16",
@@ -40,21 +40,18 @@
           "DependsOn" : "HubVPCStack",
           "Type" : "AWS::CloudFormation::Stack",
         	       "Properties" : {
-        	           "TemplateURL" : "https://s3-eu-west-1.amazonaws.com/campustemplates/nested/ControlCenter.json",
+        	           "TemplateURL" : "https://s3.amazonaws.com/ngfdemolabtemplates/nested/ControlCenter.json",
         	           "Parameters" : {
         	             "KeyName" : {"Ref" : "KeyName"},
                        "ArchTagName" : "ControlCenter",
                        "DemoLabVPC" : { "Fn::GetAtt" : [ "HubVPCStack", "Outputs.VPC" ] },
                         "Subnet" : { "Fn::GetAtt" : [ "HubVPCStack", "Outputs.PrivateSubnet1" ] },
-                        "IAMRole" : "NextGenFirewallRole",
-                        "PrivateRouteTableID" : { "Fn::GetAtt" : [ "HubVPCStack", "Outputs.PrivateRouteTable" ] },
-                        "PublicRouteTableID" : { "Fn::GetAtt" : [ "HubVPCStack", "Outputs.PublicRouteTable" ] }
+                        "EIPaddressNGCC"  : "eipalloc-5ecf606b",
+                        "IAMRole" : "NextGenFirewallRole"
         	           }
 
                 }
-              }
-
-
+        }
  },
 
  "Outputs" : {

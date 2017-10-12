@@ -29,7 +29,7 @@
     "BEIJINGstack":{
           "Type" : "AWS::CloudFormation::Stack",
                  "Properties" : {
-                     "TemplateURL" : "https://s3-eu-west-1.amazonaws.com/campustemplates/nested/remoteFW.json",
+                     "TemplateURL" : "https://s3.amazonaws.com/ngfdemolabtemplates/nested/remoteFW.json",
                      "Parameters" : {
                        "ArchTagName" : "Beijing",
                         "VPC" : "10.160.0.0/16",
@@ -52,7 +52,7 @@
       "SYNDEYstack":{
             "Type" : "AWS::CloudFormation::Stack",
                    "Properties" : {
-                       "TemplateURL" : "https://s3-eu-west-1.amazonaws.com/campustemplates/nested/remoteFW.json",
+                       "TemplateURL" : "https://s3.amazonaws.com/ngfdemolabtemplates/nested/remoteFW.json",
                        "Parameters" : {
                          "ArchTagName" : "Sydney",
                           "VPC" : "10.161.0.0/16",
@@ -75,7 +75,7 @@
         "FRANKFURTstack":{
               "Type" : "AWS::CloudFormation::Stack",
                      "Properties" : {
-                         "TemplateURL" : "https://s3-eu-west-1.amazonaws.com/campustemplates/nested/remoteFW.json",
+                         "TemplateURL" : "https://s3.amazonaws.com/ngfdemolabtemplates/nested/remoteFW.json",
                          "Parameters" : {
                            "ArchTagName" : "Frankfurt",
                             "VPC" : "10.133.0.0/16",
@@ -99,7 +99,7 @@
         "INNSBRUCKstack":{
               "Type" : "AWS::CloudFormation::Stack",
                      "Properties" : {
-                         "TemplateURL" : "https://s3-eu-west-1.amazonaws.com/campustemplates/nested/remoteFW.json",
+                         "TemplateURL" : "https://s3.amazonaws.com/ngfdemolabtemplates/nested/remoteFW.json",
                          "Parameters" : {
                            "ArchTagName" : "Innsbruck",
                             "VPC" : "10.134.0.0/16",
@@ -123,7 +123,7 @@
             "VIENNAstack":{
                   "Type" : "AWS::CloudFormation::Stack",
                          "Properties" : {
-                             "TemplateURL" : "https://s3-eu-west-1.amazonaws.com/campustemplates/nested/remoteFW.json",
+                             "TemplateURL" : "https://s3.amazonaws.com/ngfdemolabtemplates/nested/remoteFW.json",
                              "Parameters" : {
                                "ArchTagName" : "Vienna",
                                 "VPC" : "10.135.0.0/16",
@@ -147,7 +147,7 @@
               "ATLANTAstack":{
                     "Type" : "AWS::CloudFormation::Stack",
                            "Properties" : {
-                               "TemplateURL" : "https://s3-eu-west-1.amazonaws.com/campustemplates/nested/remoteFW.json",
+                               "TemplateURL" : "https://s3.amazonaws.com/ngfdemolabtemplates/nested/remoteFW.json",
                                "Parameters" : {
                                  "ArchTagName" : "Atlanta",
                                   "VPC" : "10.141.0.0/16",
@@ -171,7 +171,7 @@
                 "AUSTINstack":{
                       "Type" : "AWS::CloudFormation::Stack",
                              "Properties" : {
-                                 "TemplateURL" : "https://s3-eu-west-1.amazonaws.com/campustemplates/nested/remoteFW.json",
+                                 "TemplateURL" : "https://s3.amazonaws.com/ngfdemolabtemplates/nested/remoteFW.json",
                                  "Parameters" : {
                                    "ArchTagName" : "Austin",
                                     "VPC" : "10.142.0.0/16",
@@ -195,7 +195,7 @@
                   "CHICAGOstack":{
                         "Type" : "AWS::CloudFormation::Stack",
                                "Properties" : {
-                                   "TemplateURL" : "https://s3-eu-west-1.amazonaws.com/campustemplates/nested/remoteFW.json",
+                                   "TemplateURL" : "https://s3.amazonaws.com/ngfdemolabtemplates/nested/remoteFW.json",
                                    "Parameters" : {
                                      "ArchTagName" : "Chicago",
                                       "VPC" : "10.143.0.0/16",
@@ -219,7 +219,7 @@
                     "PORTLANDstack":{
                           "Type" : "AWS::CloudFormation::Stack",
                                  "Properties" : {
-                                     "TemplateURL" : "https://s3-eu-west-1.amazonaws.com/campustemplates/nested/remoteFW.json",
+                                     "TemplateURL" : "https://s3.amazonaws.com/ngfdemolabtemplates/nested/remoteFW.json",
                                      "Parameters" : {
                                        "ArchTagName" : "Portland",
                                         "VPC" : "10.144.0.0/16",
@@ -242,7 +242,7 @@
                       "SANFRANCISCOstack":{
                             "Type" : "AWS::CloudFormation::Stack",
                                    "Properties" : {
-                                       "TemplateURL" : "https://s3-eu-west-1.amazonaws.com/campustemplates/nested/remoteFW.json",
+                                       "TemplateURL" : "https://s3.amazonaws.com/ngfdemolabtemplates/nested/remoteFW.json",
                                        "Parameters" : {
                                          "ArchTagName" : "SanFrancisco",
                                           "VPC" : "10.145.0.0/16",
