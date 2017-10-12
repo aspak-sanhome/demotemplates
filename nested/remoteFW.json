@@ -98,7 +98,7 @@
                            "IAMProfile": "NextGenFirewallRole",
                            "CCIPAddress": {"Ref" : "CCPointOfEntry"},
                            "CCUser": "root",
-                           "CCPassword": "Ziosch17$",
+                           "CCPassword": "NGF1r3wall!!",
                            "CCCluster": {"Ref" : "CCCluster"},
                            "CCRange": {"Ref" : "CCRange"},
                            "CCBoxname": {"Ref" : "CCBoxname"},

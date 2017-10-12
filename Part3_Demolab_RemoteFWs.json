@@ -26,31 +26,242 @@
 
 
   "Resources": {
+    "BEIJINGstack":{
+          "Type" : "AWS::CloudFormation::Stack",
+                 "Properties" : {
+                     "TemplateURL" : "https://s3-eu-west-1.amazonaws.com/campustemplates/nested/remoteFW.json",
+                     "Parameters" : {
+                       "ArchTagName" : "Beijing",
+                        "VPC" : "10.160.0.0/16",
+                        "PublicSubnet1" : "10.160.0.0/24",
+                        "PublicSubnet2" : "10.160.10.0/24",
+                        "PrivateSubnet1" : "10.160.1.0/24",
+                        "PrivateSubnet2" : "10.160.2.0/24",
+                        "EIPaddressIdPrimary" : "eipalloc-410ad474",
+                        "EIPaddressIdSecondary" : "eipalloc-e409d7d1",
+                        "PrimaryPrivateIPAddress": "10.160.0.10",
+                        "SecondaryPrivateIpAddress" : "10.160.0.15",
+                        "KeyName" : {"Ref" : "KeyName"},
+                        "CCPointOfEntry": {"Ref" : "CCPointOfEntry"},
+                        "CCCluster": "APAC",
+                        "CCRange": "1",
+                        "CCBoxname": "Beijing"
+                     }
+                }
+      },
+      "SYNDEYstack":{
+            "Type" : "AWS::CloudFormation::Stack",
+                   "Properties" : {
+                       "TemplateURL" : "https://s3-eu-west-1.amazonaws.com/campustemplates/nested/remoteFW.json",
+                       "Parameters" : {
+                         "ArchTagName" : "Sydney",
+                          "VPC" : "10.161.0.0/16",
+                          "PublicSubnet1" : "10.161.0.0/24",
+                          "PublicSubnet2" : "10.161.10.0/24",
+                          "PrivateSubnet1" : "10.161.1.0/24",
+                          "PrivateSubnet2" : "10.161.2.0/24",
+                          "EIPaddressIdPrimary" : "eipalloc-730bd546",
+                          "EIPaddressIdSecondary" : "eipalloc-aa0bd59f",
+                          "PrimaryPrivateIPAddress": "10.161.0.10",
+                          "SecondaryPrivateIpAddress" : "10.161.0.15",
+                          "KeyName" : {"Ref" : "KeyName"},
+                          "CCPointOfEntry": {"Ref" : "CCPointOfEntry"},
+                          "CCCluster": "APAC",
+                          "CCRange": "1",
+                          "CCBoxname": "Sydney"
+                       }
+                  }
+        },
+        "FRANKFURTstack":{
+              "Type" : "AWS::CloudFormation::Stack",
+                     "Properties" : {
+                         "TemplateURL" : "https://s3-eu-west-1.amazonaws.com/campustemplates/nested/remoteFW.json",
+                         "Parameters" : {
+                           "ArchTagName" : "Frankfurt",
+                            "VPC" : "10.133.0.0/16",
+                            "PublicSubnet1" : "10.133.0.0/24",
+                            "PublicSubnet2" : "10.133.10.0/24",
+                            "PrivateSubnet1" : "10.133.1.0/24",
+                            "PrivateSubnet2" : "10.133.2.0/24",
+                            "EIPaddressIdPrimary" : "eipalloc-6e08d65b",
+                            "EIPaddressIdSecondary" : "eipalloc-960bd5a3",
+                            "PrimaryPrivateIPAddress": "10.133.0.10",
+                            "SecondaryPrivateIpAddress" : "10.133.0.15",
+                            "KeyName" : {"Ref" : "KeyName"},
+                            "CCPointOfEntry": {"Ref" : "CCPointOfEntry"},
+                            "CCCluster": "EMEA",
+                            "CCRange": "1",
+                            "CCBoxname": "Frankfurt"
+                         }
+                    }
+          },
 
-        "IBKstack":{
+        "INNSBRUCKstack":{
               "Type" : "AWS::CloudFormation::Stack",
                      "Properties" : {
                          "TemplateURL" : "https://s3-eu-west-1.amazonaws.com/campustemplates/nested/remoteFW.json",
                          "Parameters" : {
                            "ArchTagName" : "Innsbruck",
-                            "VPC" : "10.101.0.0/16",
-                            "PublicSubnet1" : "10.101.0.0/24",
-                            "PublicSubnet2" : "10.101.10.0/24",
-                            "PrivateSubnet1" : "10.101.1.0/24",
-                            "PrivateSubnet2" : "10.101.2.0/24",
-                            "EIPaddressIdPrimary" : "eipalloc-0ccacd36",
-                            "EIPaddressIdSecondary" : "eipalloc-cdcacdf7",
-                            "PrimaryPrivateIPAddress": "10.101.0.10",
-                            "SecondaryPrivateIpAddress" : "10.101.0.15",
+                            "VPC" : "10.134.0.0/16",
+                            "PublicSubnet1" : "10.134.0.0/24",
+                            "PublicSubnet2" : "10.134.10.0/24",
+                            "PrivateSubnet1" : "10.134.1.0/24",
+                            "PrivateSubnet2" : "10.134.2.0/24",
+                            "EIPaddressIdPrimary" : "eipalloc-cb0cd2fe",
+                            "EIPaddressIdSecondary" : "eipalloc-1604da23",
+                            "PrimaryPrivateIPAddress": "10.134.0.10",
+                            "SecondaryPrivateIpAddress" : "10.134.0.15",
                             "KeyName" : {"Ref" : "KeyName"},
                             "CCPointOfEntry": {"Ref" : "CCPointOfEntry"},
-                            "CCCluster": "Innsbruck",
-                            "CCRange": "2",
+                            "CCCluster": "EMEA",
+                            "CCRange": "1",
                             "CCBoxname": "Innsbruck"
                          }
                     }
-                  }
+            },
 
+            "VIENNAstack":{
+                  "Type" : "AWS::CloudFormation::Stack",
+                         "Properties" : {
+                             "TemplateURL" : "https://s3-eu-west-1.amazonaws.com/campustemplates/nested/remoteFW.json",
+                             "Parameters" : {
+                               "ArchTagName" : "Vienna",
+                                "VPC" : "10.135.0.0/16",
+                                "PublicSubnet1" : "10.135.0.0/24",
+                                "PublicSubnet2" : "10.135.10.0/24",
+                                "PrivateSubnet1" : "10.135.1.0/24",
+                                "PrivateSubnet2" : "10.135.2.0/24",
+                                "EIPaddressIdPrimary" : "eipalloc-870bd5b2",
+                                "EIPaddressIdSecondary" : "eipalloc-f00dd3c5",
+                                "PrimaryPrivateIPAddress": "10.135.0.10",
+                                "SecondaryPrivateIpAddress" : "10.135.0.15",
+                                "KeyName" : {"Ref" : "KeyName"},
+                                "CCPointOfEntry": {"Ref" : "CCPointOfEntry"},
+                                "CCCluster": "EMEA",
+                                "CCRange": "1",
+                                "CCBoxname": "Vienna"
+                             }
+                        }
+              },
+
+              "ATLANTAstack":{
+                    "Type" : "AWS::CloudFormation::Stack",
+                           "Properties" : {
+                               "TemplateURL" : "https://s3-eu-west-1.amazonaws.com/campustemplates/nested/remoteFW.json",
+                               "Parameters" : {
+                                 "ArchTagName" : "Atlanta",
+                                  "VPC" : "10.141.0.0/16",
+                                  "PublicSubnet1" : "10.141.0.0/24",
+                                  "PublicSubnet2" : "10.141.10.0/24",
+                                  "PrivateSubnet1" : "10.141.1.0/24",
+                                  "PrivateSubnet2" : "10.141.2.0/24",
+                                  "EIPaddressIdPrimary" : "eipalloc-2213cd17",
+                                  "EIPaddressIdSecondary" : "eipalloc-7210ce47",
+                                  "PrimaryPrivateIPAddress": "10.141.0.10",
+                                  "SecondaryPrivateIpAddress" : "10.141.0.15",
+                                  "KeyName" : {"Ref" : "KeyName"},
+                                  "CCPointOfEntry": {"Ref" : "CCPointOfEntry"},
+                                  "CCCluster": "NA",
+                                  "CCRange": "1",
+                                  "CCBoxname": "Atlanta"
+                               }
+                          }
+                },
+
+                "AUSTINstack":{
+                      "Type" : "AWS::CloudFormation::Stack",
+                             "Properties" : {
+                                 "TemplateURL" : "https://s3-eu-west-1.amazonaws.com/campustemplates/nested/remoteFW.json",
+                                 "Parameters" : {
+                                   "ArchTagName" : "Austin",
+                                    "VPC" : "10.142.0.0/16",
+                                    "PublicSubnet1" : "10.142.0.0/24",
+                                    "PublicSubnet2" : "10.142.10.0/24",
+                                    "PrivateSubnet1" : "10.142.1.0/24",
+                                    "PrivateSubnet2" : "10.142.2.0/24",
+                                    "EIPaddressIdPrimary" : "eipalloc-cf08d6fa",
+                                    "EIPaddressIdSecondary" : "eipalloc-4d0bd578",
+                                    "PrimaryPrivateIPAddress": "10.142.0.10",
+                                    "SecondaryPrivateIpAddress" : "10.142.0.15",
+                                    "KeyName" : {"Ref" : "KeyName"},
+                                    "CCPointOfEntry": {"Ref" : "CCPointOfEntry"},
+                                    "CCCluster": "NA",
+                                    "CCRange": "1",
+                                    "CCBoxname": "Austin"
+                                 }
+                            }
+                  },
+
+                  "CHICAGOstack":{
+                        "Type" : "AWS::CloudFormation::Stack",
+                               "Properties" : {
+                                   "TemplateURL" : "https://s3-eu-west-1.amazonaws.com/campustemplates/nested/remoteFW.json",
+                                   "Parameters" : {
+                                     "ArchTagName" : "Chicago",
+                                      "VPC" : "10.143.0.0/16",
+                                      "PublicSubnet1" : "10.143.0.0/24",
+                                      "PublicSubnet2" : "10.143.10.0/24",
+                                      "PrivateSubnet1" : "10.143.1.0/24",
+                                      "PrivateSubnet2" : "10.143.2.0/24",
+                                      "EIPaddressIdPrimary" : "eipalloc-480cd27d",
+                                      "EIPaddressIdSecondary" : "eipalloc-e111cfd4",
+                                      "PrimaryPrivateIPAddress": "10.143.0.10",
+                                      "SecondaryPrivateIpAddress" : "10.143.0.15",
+                                      "KeyName" : {"Ref" : "KeyName"},
+                                      "CCPointOfEntry": {"Ref" : "CCPointOfEntry"},
+                                      "CCCluster": "NA",
+                                      "CCRange": "1",
+                                      "CCBoxname": "Chicago"
+                                   }
+                              }
+                    },
+
+                    "PORTLANDstack":{
+                          "Type" : "AWS::CloudFormation::Stack",
+                                 "Properties" : {
+                                     "TemplateURL" : "https://s3-eu-west-1.amazonaws.com/campustemplates/nested/remoteFW.json",
+                                     "Parameters" : {
+                                       "ArchTagName" : "Portland",
+                                        "VPC" : "10.144.0.0/16",
+                                        "PublicSubnet1" : "10.144.0.0/24",
+                                        "PublicSubnet2" : "10.144.10.0/24",
+                                        "PrivateSubnet1" : "10.144.1.0/24",
+                                        "PrivateSubnet2" : "10.144.2.0/24",
+                                        "EIPaddressIdPrimary" : "eipalloc-870fd1b2",
+                                        "EIPaddressIdSecondary" : "eipalloc-bc0cd289",
+                                        "PrimaryPrivateIPAddress": "10.144.0.10",
+                                        "SecondaryPrivateIpAddress" : "10.144.0.15",
+                                        "KeyName" : {"Ref" : "KeyName"},
+                                        "CCPointOfEntry": {"Ref" : "CCPointOfEntry"},
+                                        "CCCluster": "NA",
+                                        "CCRange": "1",
+                                        "CCBoxname": "Portland"
+                                     }
+                                }
+                      },
+                      "SANFRANCISCOstack":{
+                            "Type" : "AWS::CloudFormation::Stack",
+                                   "Properties" : {
+                                       "TemplateURL" : "https://s3-eu-west-1.amazonaws.com/campustemplates/nested/remoteFW.json",
+                                       "Parameters" : {
+                                         "ArchTagName" : "SanFrancisco",
+                                          "VPC" : "10.145.0.0/16",
+                                          "PublicSubnet1" : "10.145.0.0/24",
+                                          "PublicSubnet2" : "10.145.10.0/24",
+                                          "PrivateSubnet1" : "10.145.1.0/24",
+                                          "PrivateSubnet2" : "10.145.2.0/24",
+                                          "EIPaddressIdPrimary" : "eipalloc-3e0fd10b",
+                                          "EIPaddressIdSecondary" : "eipalloc-920dd3a7",
+                                          "PrimaryPrivateIPAddress": "10.145.0.10",
+                                          "SecondaryPrivateIpAddress" : "10.145.0.15",
+                                          "KeyName" : {"Ref" : "KeyName"},
+                                          "CCPointOfEntry": {"Ref" : "CCPointOfEntry"},
+                                          "CCCluster": "NA",
+                                          "CCRange": "1",
+                                          "CCBoxname": "SanFrancisco"
+                                       }
+                                  }
+                        }
  },
 
  "Outputs" : {

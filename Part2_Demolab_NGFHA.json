@@ -14,7 +14,22 @@
       "Description" : "Name of an existing EC2 KeyPair to enable SSH access to the instances",
       "Type" : "AWS::EC2::KeyPair::KeyName",
       "ConstraintDescription" : "Must be the name of an existing EC2 KeyPair.",
-      "Default" : "MZ_keys"
+      "Default" : "CudaLab"
+    },
+    "VPCId": {
+        "Type": "AWS::EC2::VPC::Id",
+        "Description": "The Id of the VPC in which this instance is being created",
+        "Default" : ""
+    },
+    "PublicSubnet1Id": {
+        "Description": "The Id of the subnet in which the primary managed box is deployed",
+        "Type": "AWS::EC2::Subnet::Id",
+        "Default" : ""
+    },
+    "PublicSubnet2Id": {
+        "Description": "The Id of the subnet in which the secondary managed box is deployed",
+        "Type": "AWS::EC2::Subnet::Id",
+        "Default" : ""
     }
 
   },
@@ -33,14 +48,14 @@
                        "IAMProfile": "NextGenFirewallRole",
                        "CCIPAddress": "10.100.1.10",
                        "CCUser": "root",
-                       "CCPassword": "Ziosch17$",
-                       "CCCluster": "Frankfurt",
+                       "CCPassword": "NGF1r3wall!!",
+                       "CCCluster": "NA",
                        "CCRange": "1",
-                       "CCBoxname": "HQ-NGF1",
+                       "CCBoxname": "Campbell-clm1",
                        "PrivateIpAddress": "10.100.0.10",
                        "SecondaryPrivateIpAddress": "10.100.0.15",
-                       "VPCId": "vpc-7f2a6e18",
-                       "SubnetId": "subnet-3b21525c"
+                       "VPCId": {"Ref" : "VPCId"},
+                       "SubnetId": {"Ref" : "PublicSubnet1Id"}
         	           },
                      "TimeoutInMinutes" : "10"
                 }
@@ -57,14 +72,14 @@
                                  "IAMProfile": "NextGenFirewallRole",
                                  "CCIPAddress": "10.100.1.10",
                                  "CCUser": "root",
-                                 "CCPassword": "Ziosch17$",
-                                 "CCCluster": "Frankfurt",
+                                 "CCPassword": "NGF1r3wall!!",
+                                 "CCCluster": "NA",
                                  "CCRange": "1",
-                                 "CCBoxname": "HQ-NGF2",
+                                 "CCBoxname": "Campbell-clm2",
                                  "PrivateIpAddress": "10.100.10.10",
                                  "SecondaryPrivateIpAddress": "10.100.10.15",
-                                 "VPCId": "vpc-7f2a6e18",
-                                 "SubnetId": "subnet-f3007aba"
+                                 "VPCId": {"Ref" : "VPCId"},
+                                 "SubnetId": {"Ref" : "PublicSubnet2Id"}
                                }
                           }
                         },
@@ -75,8 +90,8 @@
                                      "Properties" : {
                                          "TemplateURL" : "https://s3-eu-west-1.amazonaws.com/campustemplates/nested/associateEIP.json",
                                          "Parameters" : {
-                                           "EIPaddressIdPrimary" : "eipalloc-07d2eb3d",
-                                           "EIPaddressIdSecondary" : "eipalloc-b1cdca8b",
+                                           "EIPaddressIdPrimary" : "eipalloc-2802dc1d",
+                                           "EIPaddressIdSecondary" : "eipalloc-8f05dbba",
                                            "instanceId" :  { "Fn::GetAtt" : [ "HAStackNGF1", "Outputs.instanceId" ] },
                                            "PrimaryPrivateIPAddress" : "10.100.0.10",
                                            "SecondaryPrivateIpAddress" : "10.100.0.15"
@@ -90,8 +105,8 @@
                               "Properties" : {
                                    "TemplateURL" : "https://s3-eu-west-1.amazonaws.com/campustemplates/nested/associateEIP.json",
                                    "Parameters" : {
-                                   "EIPaddressIdPrimary" : "eipalloc-94d5ecae",
-                                   "EIPaddressIdSecondary" : "eipalloc-a2cacd98",
+                                   "EIPaddressIdPrimary" : "eipalloc-f705dbc2",
+                                   "EIPaddressIdSecondary" : "eipalloc-1f0ad42a",
                                    "instanceId" :  { "Fn::GetAtt" : [ "HAStackNGF2", "Outputs.instanceId" ] },
                                    "PrimaryPrivateIPAddress" : "10.100.10.10",
                                    "SecondaryPrivateIpAddress" : "10.100.10.15"

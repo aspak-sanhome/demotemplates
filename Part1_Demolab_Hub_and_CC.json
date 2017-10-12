@@ -14,7 +14,7 @@
       "Description" : "Name of an existing EC2 KeyPair to enable SSH access to the instances",
       "Type" : "AWS::EC2::KeyPair::KeyName",
       "ConstraintDescription" : "Must be the name of an existing EC2 KeyPair.",
-      "Default" : "MZ_keys"
+      "Default" : "CudaLab"
     }
   },
 
@@ -40,7 +40,7 @@
           "DependsOn" : "HubVPCStack",
           "Type" : "AWS::CloudFormation::Stack",
         	       "Properties" : {
-        	           "TemplateURL" : "https://s3-eu-west-1.amazonaws.com/campustemplates/ControlCenter.json",
+        	           "TemplateURL" : "https://s3-eu-west-1.amazonaws.com/campustemplates/nested/ControlCenter.json",
         	           "Parameters" : {
         	             "KeyName" : {"Ref" : "KeyName"},
                        "ArchTagName" : "ControlCenter",
