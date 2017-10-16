@@ -19,29 +19,32 @@
     "VPCId": {
         "Type": "AWS::EC2::VPC::Id",
         "Description": "The Id of the VPC in which this instance is being created",
-        "Default" : ""
+        "Default" : "vpc-708f4d08"
     },
     "PublicSubnet1Id": {
         "Description": "The Id of the subnet in which the primary managed box is deployed",
         "Type": "AWS::EC2::Subnet::Id",
-        "Default" : ""
+        "Default" : "subnet-ad4499e6"
     },
     "PublicSubnet2Id": {
         "Description": "The Id of the subnet in which the secondary managed box is deployed",
         "Type": "AWS::EC2::Subnet::Id",
-        "Default" : ""
+        "Default" : "subnet-7afceb20"
     },
     "PrivateRouteTableID" : {
       "Type" : "String",
-      "Description" : " RouteTable ID for the private table used to create VIP network routes"
+      "Description" : " RouteTable ID for the private table used to create VIP network routes",
+      "Default" : "rtb-9cf059e6"
     },
      "PublicRouteTableID" : {
        "Type" : "String",
-       "Description" : " RouteTable ID for the public route table used to create VIP network routes"
+       "Description" : " RouteTable ID for the public route table used to create VIP network routes",
+       "Default" : "rtb-64fd541e"
      },
      "NGCCinstanceId" : {
        "Description" : "Control Center Instance ID ",
-        "Type" : "AWS::EC2::Instance::Id"
+        "Type" : "AWS::EC2::Instance::Id",
+        "Default" : "i-088125cf6a764dc1b"
      }
 
   },
@@ -66,10 +69,11 @@
                        "CCBoxname": "Campbell-clm1",
                        "PrivateIpAddress": "10.100.0.10",
                        "SecondaryPrivateIpAddress": "10.100.0.15",
+                       "ThirdPrivateIpAddress" : "10.100.0.20",
                        "VPCId": {"Ref" : "VPCId"},
                        "SubnetId": {"Ref" : "PublicSubnet1Id"}
         	           },
-                     "TimeoutInMinutes" : "10"
+                     "TimeoutInMinutes" : "15"
                 }
             },
             "HAStackNGF2":{
@@ -89,9 +93,11 @@
                                "CCBoxname": "Campbell-clm2",
                                "PrivateIpAddress": "10.100.10.10",
                                "SecondaryPrivateIpAddress": "10.100.10.15",
+                               "ThirdPrivateIpAddress" : "10.100.10.20",
                                "VPCId": {"Ref" : "VPCId"},
                                "SubnetId": {"Ref" : "PublicSubnet2Id"}
-                             }
+                             },
+                        "TimeoutInMinutes" : "15"
                         }
             },
 
@@ -124,7 +130,7 @@
                              }
                         }
               },
-              "EIPHANGF2":{
+              "HARouteTable":{
                     "Type" : "AWS::CloudFormation::Stack",
                      "DependsOn" : "HAStackNGF2",
                     "Properties" : {
@@ -136,7 +142,7 @@
                            "PublicRouteTableID" : {"Ref" : "PublicRouteTableID"}
                                }
                           }
-                        }
+              }
 
 
  },

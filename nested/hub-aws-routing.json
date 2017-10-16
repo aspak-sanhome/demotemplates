@@ -1,6 +1,6 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
-    "Description": "Add Elastic IP to an NGF",
+    "Description": "Configure routing in HubVPC",
     "Parameters": {
 
         "NGFinstanceId" : {
@@ -36,7 +36,7 @@
           "Type" : "AWS::EC2::Route",
           "Properties" : {
             "RouteTableId" : { "Ref" : "PrivateRouteTableID" },
-            "DestinationCidrBlock" : "10.100.253.0/24",
+            "DestinationCidrBlock" : "172.16.0.0/24",
             "InstanceId" : {"Ref" : "NGCCinstanceId"}
           }
         },
@@ -44,7 +44,7 @@
             "Type" : "AWS::EC2::Route",
             "Properties" : {
               "RouteTableId" : { "Ref" : "PublicRouteTableID" },
-              "DestinationCidrBlock" : "10.100.253.0/24",
+              "DestinationCidrBlock" : "172.16.0.0/24",
               "InstanceId" : {"Ref" : "NGCCinstanceId"}
             }
       }

@@ -4,7 +4,6 @@
 
   "Parameters" : {
 
-
    "ArchTagName" : {
     	"Type" : "String",
     	"Default" : "VPC",
@@ -12,32 +11,26 @@
     },
     "VPC" :{
       "Type" : "String",
-      "Default" : " 10.100.0.0/16",
       "Description" : "CIDR range for Hub VPC"
     },
     "PublicSubnet1" :{
       "Type" : "String",
-      "Default" : " 10.100.0.0/24",
       "Description" : "Public Subnet1"
     },
     "PublicSubnet2" :{
       "Type" : "String",
-      "Default" : " 10.100.10.0/24",
-      "Description" : "Public Subnet1"
+      "Description" : "Public Subnet2"
     },
     "PrivateSubnet1" :{
       "Type" : "String",
-      "Default" : " 10.100.1.0/24",
-      "Description" : "Public Subnet1"
+      "Description" : "Private Subnet1"
     },
     "PrivateSubnet2" :{
       "Type" : "String",
-      "Default" : " 10.100.2.0/24",
-      "Description" : "Public Subnet1"
+      "Description" : "Private Subnet1"
     }
 
   },
-
 
   "Resources": {
     "vpcNGF": {
@@ -219,10 +212,10 @@
 	},
 
      "routeTablePrivate" : {
-      "Type" : "AWS::EC2::RouteTable",
-      "Properties" : {
-        "VpcId" : { "Ref" : "vpcNGF" },
-        "Tags": [
+        "Type" : "AWS::EC2::RouteTable",
+        "Properties" : {
+          "VpcId" : { "Ref" : "vpcNGF" },
+          "Tags": [
           {
             "Key": "Name",
             "Value": {"Fn::Join" : ["", [{ "Ref": "ArchTagName"},"-RouteTablePrivate"
@@ -240,7 +233,6 @@
 
   "routeTableToSubnetPrivate1" : {
    		"Type" : "AWS::EC2::SubnetRouteTableAssociation",
-
 	    "Properties" : {
       		"RouteTableId" : { "Ref" : "routeTablePrivate" },
       		"SubnetId" : {"Ref" : "subnetPrivate1"}
@@ -254,27 +246,7 @@
       		"RouteTableId" : { "Ref" : "routeTablePrivate" },
       		"SubnetId" : {"Ref" : "subnetPrivate2"}
       		}
-	},
-  
-  "S3Endpoint" : {
-      "Type" : "AWS::EC2::VPCEndpoint",
-      "Properties" : {
-        "PolicyDocument" : {
-            "Statement": [
-                {
-                  "Action": "*",
-                  "Effect": "Allow",
-                  "Resource": "*",
-                  "Principal": "*"
-                }
-              ]
-      },
-        "RouteTableIds" : [ {"Ref" : "routeTablePublic"}, {"Ref" : "routeTablePrivate"} ],
-        "ServiceName" : { "Fn::Join": [ "", [ "com.amazonaws.", { "Ref": "AWS::Region" }, ".s3" ] ] },
-        "VpcId" : {"Ref" : "vpcNGF"}
-      }
-    }
-
+	}
 
 
  },
@@ -308,9 +280,6 @@
     {
       "Value" : {"Ref" : "routeTablePublic"}
     }
-
-
-
 
   }
 

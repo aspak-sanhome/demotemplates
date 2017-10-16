@@ -158,6 +158,11 @@
             "Type": "String",
             "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})"
         },
+        "ThirdPrivateIpAddress": {
+            "Description": "Third Private IP of the Box in the AWS subnet. Leave empty to not add a second IP",
+            "Type": "String",
+            "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})"
+        },
         "VPCId": {
             "Type": "AWS::EC2::VPC::Id",
             "Description": "The Id of the VPC in which this instance is being created"
@@ -238,6 +243,23 @@
         }
     },
     "Resources": {
+      "securityGroupFW" : {
+          "Type" : "AWS::EC2::SecurityGroup",
+          "Properties" : {
+            "GroupDescription" : "Allow All Traffic.",
+            "VpcId" : { "Ref" : "VPCId" },
+             "SecurityGroupIngress" : [
+              { "IpProtocol" : "-1", "FromPort" : "-1", "ToPort" : "-1", "CidrIp" : "0.0.0.0/0"}
+               ],
+              "Tags": [
+              {
+                "Key": "Name",
+                "Value": "SecurityGroupFWOpenAll"
+              }
+            ]
+          }
+        },
+
         "ManagedBox": {
             "Type": "AWS::EC2::Instance",
             "CreationPolicy": {
@@ -279,11 +301,16 @@
                           {
                             "PrivateIpAddress" : {"Ref" : "SecondaryPrivateIpAddress"},
                             "Primary" : false
+                          },
+                          {
+                            "PrivateIpAddress" : {"Ref" : "ThirdPrivateIpAddress"},
+                            "Primary" : false
                           }
                             ],
                         "SubnetId": {
                             "Ref": "SubnetId"
-                        }
+                        },
+                        "GroupSet" : [ { "Ref" : "securityGroupFW" } ],
                     }
                 ],
                 "Tags": [
@@ -325,7 +352,6 @@
         }
 
       },
-
 
     "Outputs" : {
       "instanceId":{

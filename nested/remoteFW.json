@@ -52,6 +52,10 @@
       "Description" : "Secondary Private IP where the EIP will be attached",
        "Type" : "String"
     },
+    "ThirdPrivateIpAddress" : {
+      "Description" : "Third Private IP where the EIP will be attached",
+       "Type" : "String"
+    },
     "CCCluster": {
           "Description": "Name of the Cluster on the CC",
           "Type": "String"
@@ -104,12 +108,13 @@
                            "CCBoxname": {"Ref" : "CCBoxname"},
                            "PrivateIpAddress": {"Ref" : "PrimaryPrivateIPAddress"},
                            "SecondaryPrivateIpAddress" : {"Ref" : "SecondaryPrivateIpAddress"},
+                           "ThirdPrivateIpAddress" :{"Ref" : "ThirdPrivateIpAddress"},
                            "VPCId": { "Fn::GetAtt" : [ "RemoteFWVPCStack", "Outputs.VPC" ] },
                            "SubnetId": { "Fn::GetAtt" : [ "RemoteFWVPCStack", "Outputs.PublicSubnet1" ] }
                          }
                     }
                   },
-                  "EIPIBK":{
+                  "EIPRemoteFW":{
                         "Type" : "AWS::CloudFormation::Stack",
                         "DependsOn" : "RemoteFWstack",
                         "Properties" : {
