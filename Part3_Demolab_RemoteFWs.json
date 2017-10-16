@@ -49,30 +49,6 @@
                      }
                 }
       },
-      "SYNDEYstack":{
-            "Type" : "AWS::CloudFormation::Stack",
-                   "Properties" : {
-                       "TemplateURL" : "https://s3.amazonaws.com/ngfdemolabtemplates/nested/remoteFW.json",
-                       "Parameters" : {
-                         "ArchTagName" : "Sydney",
-                          "VPC" : "10.161.0.0/16",
-                          "PublicSubnet1" : "10.161.0.0/24",
-                          "PublicSubnet2" : "10.161.10.0/24",
-                          "PrivateSubnet1" : "10.161.1.0/24",
-                          "PrivateSubnet2" : "10.161.2.0/24",
-                          "EIPaddressIdPrimary" : "eipalloc-730bd546",
-                          "EIPaddressIdSecondary" : "eipalloc-aa0bd59f",
-                          "PrimaryPrivateIPAddress": "10.161.0.10",
-                          "SecondaryPrivateIpAddress" : "10.161.0.15",
-                          "ThirdPrivateIpAddress" : "10.161.0.20",
-                          "KeyName" : {"Ref" : "KeyName"},
-                          "CCPointOfEntry": {"Ref" : "CCPointOfEntry"},
-                          "CCCluster": "APAC",
-                          "CCRange": "1",
-                          "CCBoxname": "Sydney"
-                       }
-                  }
-        },
         "SYNDEYstack":{
               "Type" : "AWS::CloudFormation::Stack",
                      "Properties" : {
