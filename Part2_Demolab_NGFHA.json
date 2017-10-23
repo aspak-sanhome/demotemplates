@@ -19,32 +19,32 @@
     "VPCId": {
         "Type": "AWS::EC2::VPC::Id",
         "Description": "The Id of the VPC in which this instance is being created",
-        "Default" : "vpc-708f4d08"
+        "Default" : "vpc-9ca66ce4"
     },
     "PublicSubnet1Id": {
         "Description": "The Id of the subnet in which the primary managed box is deployed",
         "Type": "AWS::EC2::Subnet::Id",
-        "Default" : "subnet-ad4499e6"
+        "Default" : "subnet-77b46e3c"
     },
     "PublicSubnet2Id": {
         "Description": "The Id of the subnet in which the secondary managed box is deployed",
         "Type": "AWS::EC2::Subnet::Id",
-        "Default" : "subnet-7afceb20"
+        "Default" : "subnet-23e5f879"
     },
     "PrivateRouteTableID" : {
       "Type" : "String",
       "Description" : " RouteTable ID for the private table used to create VIP network routes",
-      "Default" : "rtb-9cf059e6"
+      "Default" : "rtb-87bf3dfd"
     },
      "PublicRouteTableID" : {
        "Type" : "String",
        "Description" : " RouteTable ID for the public route table used to create VIP network routes",
-       "Default" : "rtb-64fd541e"
+       "Default" : "rtb-70be3c0a"
      },
      "NGCCinstanceId" : {
        "Description" : "Control Center Instance ID ",
         "Type" : "AWS::EC2::Instance::Id",
-        "Default" : "i-088125cf6a764dc1b"
+        "Default" : "i-032e1528625dff359"
      }
 
   },
@@ -110,8 +110,8 @@
                                "EIPaddressIdPrimary" : "eipalloc-2802dc1d",
                                "EIPaddressIdSecondary" : "eipalloc-8f05dbba",
                                "instanceId" :  { "Fn::GetAtt" : [ "HAStackNGF1", "Outputs.instanceId" ] },
-                               "PrimaryPrivateIPAddress" : "10.100.0.10",
-                               "SecondaryPrivateIpAddress" : "10.100.0.15"
+                               "PrimaryPrivateIPAddress" : "10.100.0.15",
+                               "SecondaryPrivateIpAddress" : "10.100.0.20"
                              }
                         }
             },
@@ -125,8 +125,8 @@
                        "EIPaddressIdPrimary" : "eipalloc-f705dbc2",
                        "EIPaddressIdSecondary" : "eipalloc-1f0ad42a",
                        "instanceId" :  { "Fn::GetAtt" : [ "HAStackNGF2", "Outputs.instanceId" ] },
-                       "PrimaryPrivateIPAddress" : "10.100.10.10",
-                       "SecondaryPrivateIpAddress" : "10.100.10.15"
+                       "PrimaryPrivateIPAddress" : "10.100.10.15",
+                       "SecondaryPrivateIpAddress" : "10.100.10.20"
                              }
                         }
               },
