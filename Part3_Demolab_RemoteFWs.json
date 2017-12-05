@@ -20,6 +20,14 @@
       "Type" : "AWS::EC2::KeyPair::KeyName",
       "ConstraintDescription" : "Must be the name of an existing EC2 KeyPair.",
       "Default" : "CudaLab"
+    },
+    "BeijingAMI" : {
+      "Type" : "String",
+      "Default" : "ami-2431a35e"
+    },
+    "SydneyAMI" : {
+      "Type" : "String",
+      "Default" : "ami-7030a20a"
     }
   },
 
@@ -49,7 +57,25 @@
                      }
                 }
       },
-        "SYNDEYstack":{
+
+      "BEIJINGLinuxStack":{
+            "DependsOn" : "BEIJINGstack",
+            "Type" : "AWS::CloudFormation::Stack",
+                   "Properties" : {
+                       "TemplateURL" : "https://s3.amazonaws.com/ngfdemolabtemplates/nested/genericInstance.json",
+                       "Parameters" : {
+                         "KeyName" : {"Ref" : "KeyName"},
+                          "AMI": {"Ref" : "BeijingAMI"},
+                          "InstanceType": "t2.small",
+                          "IAMProfile": "NextGenFirewallRole",
+                          "PrivateIpAddress": "10.160.1.30",
+                          "VPCId": { "Fn::GetAtt" : [ "BEIJINGstack", "Outputs.VPC" ] },
+                          "SubnetId": { "Fn::GetAtt" : [ "BEIJINGstack", "Outputs.PrivateSubnet1" ] }
+                       }
+                  }
+          },
+
+        "SYDNEYstack":{
               "Type" : "AWS::CloudFormation::Stack",
                      "Properties" : {
                          "TemplateURL" : "https://s3.amazonaws.com/ngfdemolabtemplates/nested/remoteFW.json",
@@ -73,6 +99,25 @@
                          }
                     }
           },
+
+          "SYDNEYLinuxStack":{
+                "DependsOn" : "SYDNEYstack",
+                "Type" : "AWS::CloudFormation::Stack",
+                       "Properties" : {
+                           "TemplateURL" : "https://s3.amazonaws.com/ngfdemolabtemplates/nested/genericInstance.json",
+                           "Parameters" : {
+                             "KeyName" : {"Ref" : "KeyName"},
+                              "AMI": {"Ref" : "SydneyAMI"},
+                              "InstanceType": "t2.small",
+                              "IAMProfile": "NextGenFirewallRole",
+                              "PrivateIpAddress": "10.161.1.30",
+                              "VPCId": { "Fn::GetAtt" : [ "SYDNEYstack", "Outputs.VPC" ] },
+                              "SubnetId": { "Fn::GetAtt" : [ "SYDNEYstack", "Outputs.PrivateSubnet1" ] }
+                           }
+                      }
+              },
+
+
           "FRANKFURTstack":{
                 "Type" : "AWS::CloudFormation::Stack",
                        "Properties" : {

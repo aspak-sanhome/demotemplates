@@ -15,7 +15,24 @@
       "Type" : "AWS::EC2::KeyPair::KeyName",
       "ConstraintDescription" : "Must be the name of an existing EC2 KeyPair.",
       "Default" : "CudaLab"
+    },
+    "NGCCEIP" : {
+      "Type" : "String",
+      "Default" : "eipalloc-5ecf606b"
+    },
+    "WindowsAMI" : {
+      "Type" : "String",
+      "Default" : "ami-cc24b6b6"
+    },
+    "CCBoxPAR" : {
+      "Type" : "String",
+      "Default" : "CCbox04122017.par"
+    },
+    "CCArchivePAR" : {
+      "Type" : "String",
+      "Default" : "CCarchive04122017.par"
     }
+
   },
 
 
@@ -46,18 +63,74 @@
                        "ArchTagName" : "ControlCenter",
                        "DemoLabVPC" : { "Fn::GetAtt" : [ "HubVPCStack", "Outputs.VPC" ] },
                         "Subnet" : { "Fn::GetAtt" : [ "HubVPCStack", "Outputs.PrivateSubnet1" ] },
-                        "EIPaddressNGCC"  : "eipalloc-5ecf606b",
-                        "IAMRole" : "NextGenFirewallRole"
+                        "EIPaddressNGCC"  : {"Ref" : "NGCCEIP"},
+                        "IAMRole" : "NextGenFirewallRole",
+                        "CCBoxPAR" : {"Ref" : "CCBoxPAR"},
+                        "CCArchivePAR" : {"Ref" : "CCArchivePAR"}
         	           }
 
                 }
-        }
+        },
+        "WindowsRDSStack":{
+              "DependsOn" : "HubVPCStack",
+              "Type" : "AWS::CloudFormation::Stack",
+            	       "Properties" : {
+            	           "TemplateURL" : "https://s3.amazonaws.com/ngfdemolabtemplates/nested/genericInstance.json",
+            	           "Parameters" : {
+            	             "KeyName" : {"Ref" : "KeyName"},
+                            "AMI": {"Ref" : "WindowsAMI"},
+                            "InstanceType": "t2.large",
+                            "IAMProfile": "NextGenFirewallRole",
+                            "PrivateIpAddress": "10.100.2.80",
+                            "VPCId": { "Fn::GetAtt" : [ "HubVPCStack", "Outputs.VPC" ] },
+                            "SubnetId": { "Fn::GetAtt" : [ "HubVPCStack", "Outputs.PrivateSubnet2" ] }
+            	           }
+                    }
+            }
  },
 
  "Outputs" : {
+   "VPC":
+   {
+    "Value" :  { "Fn::GetAtt" : [ "HubVPCStack", "Outputs.VPC" ] },
+    "Export" : { "Name" : {"Fn::Sub": "${AWS::StackName}-VPCID" }}
 
-
-
+   },
+   "PublicSubnet1":
+   {
+     "Value" :  { "Fn::GetAtt" : [ "HubVPCStack", "Outputs.PublicSubnet1" ] },
+     "Export" : { "Name" : {"Fn::Sub": "${AWS::StackName}-PublicSubnet1" }}
+   },
+   "PublicSubnet2":
+   {
+     "Value" :  { "Fn::GetAtt" : [ "HubVPCStack", "Outputs.PublicSubnet2" ] },
+     "Export" : { "Name" : {"Fn::Sub": "${AWS::StackName}-PublicSubnet2" }}
+   },
+   "PrivateSubnet1":
+   {
+     "Value" :  { "Fn::GetAtt" : [ "HubVPCStack", "Outputs.PrivateSubnet1" ] },
+     "Export" : { "Name" : {"Fn::Sub": "${AWS::StackName}-PrivateSubnet1" }}
+   },
+   "PrivateSubnet2":
+   {
+     "Value" :  { "Fn::GetAtt" : [ "HubVPCStack", "Outputs.PrivateSubnet2" ] },
+     "Export" : { "Name" : {"Fn::Sub": "${AWS::StackName}-PrivateSubnet2" }}
+   },
+   "PrivateRouteTable":
+   {
+     "Value" :  { "Fn::GetAtt" : [ "HubVPCStack", "Outputs.PrivateRouteTable" ] },
+     "Export" : { "Name" : {"Fn::Sub": "${AWS::StackName}-PrivateRouteTable" }}
+   },
+   "PublicRouteTable":
+   {
+     "Value" :  { "Fn::GetAtt" : [ "HubVPCStack", "Outputs.PublicRouteTable" ] },
+     "Export" : { "Name" : {"Fn::Sub": "${AWS::StackName}-PublicRouteTable" }}
+   },
+   "NGCCInstanceId":
+   {
+     "Value" :  { "Fn::GetAtt" : [ "ControlCenterStack", "Outputs.NGCCInstanceId" ] },
+     "Export" : { "Name" : {"Fn::Sub": "${AWS::StackName}-NGCCInstanceId" }}
+   }
 
   }
 

@@ -1,0 +1,157 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Instance in backend subnets",
+    "Metadata" : {
+        "AWS::CloudFormation::Interface" : {
+            "ParameterGroups" : [
+              {
+                "Label" : {
+                    "default": "Instance Settings"
+                },
+                "Parameters" : [
+                    "InstanceType",
+                    "AMI",
+                    "KeyName",
+                    "PrivateIpAddress",
+                    "VPCId",
+                    "SubnetId",
+                    "IAMProfile"
+                ]
+              }
+            ],
+            "ParameterLabels": {
+              "InstanceType": {
+                "default": "Instance Type"
+              },
+              "LicenceMode": {
+                "default": "AMI"
+              },
+                "KeyName" : {
+                  "default" : "Existing key name"
+              },
+              "PrivateIpAddress": {
+                "default": "Private IP Address"
+              },
+
+              "VPCId": {
+                "default": "VPC physical ID"
+              },
+              "SubnetId": {
+                "default" : "Subnet physical ID"
+              },
+              "IAMProfile": {
+                "default": "IAM Profile"
+              }
+            }
+        }
+    },
+    "Parameters": {
+      "KeyName" : {
+        "Description" : "Name of an existing EC2 KeyPair to enable SSH access to the instances",
+        "Type" : "AWS::EC2::KeyPair::KeyName",
+        "ConstraintDescription" : "Must be the name of an existing EC2 KeyPair."
+      },
+        "AMI": {
+            "Description": "AMI",
+            "Type": "String"
+        },
+        "InstanceType": {
+            "Description": "EC2 instance type",
+            "Type": "String",
+            "Default": "c4.large",
+            "AllowedValues": [
+                "t2.small",
+                "t2.medium",
+                "t2.large",
+                "t2.xlarge",
+                "m4.large",
+                "c4.large"
+            ],
+            "ConstraintDescription": "must be a valid EC2 instance type available in your region."
+        },
+        "IAMProfile": {
+          "Description": "(optional) Select the IAM Role for the instance",
+          "Type": "String"
+        },
+        "PrivateIpAddress": {
+            "Description": "Private IP of the Box in the AWS subnet. Leave empty to auto-assign.",
+            "Type": "String",
+            "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})"
+        },
+        "VPCId": {
+            "Type": "AWS::EC2::VPC::Id",
+            "Description": "The Id of the VPC in which this instance is being created"
+        },
+        "SubnetId": {
+            "Description": "The Id of the subnet in which the managed box is deployed",
+            "Type": "AWS::EC2::Subnet::Id"
+        }
+    },
+
+
+    "Resources": {
+      "securityGroupAllowAll" : {
+          "Type" : "AWS::EC2::SecurityGroup",
+          "Properties" : {
+            "GroupDescription" : "Allow All Traffic.",
+            "VpcId" : { "Ref" : "VPCId" },
+             "SecurityGroupIngress" : [
+              { "IpProtocol" : "-1", "FromPort" : "-1", "ToPort" : "-1", "CidrIp" : "0.0.0.0/0"}
+               ],
+              "Tags": [
+              {
+                "Key": "Name",
+                "Value": "SecurityGroupAllowAll"
+              }
+            ]
+          }
+        },
+
+        "PrivateInstance": {
+            "Type": "AWS::EC2::Instance",
+            "Properties": {
+                "ImageId": {"Ref" : "AMI"},
+                "InstanceType": {"Ref": "InstanceType"},
+                "KeyName": { "Ref" : "KeyName" },
+                "IamInstanceProfile": {
+                    "Ref": "IAMProfile"
+                  },
+                "SourceDestCheck": "true",
+                "NetworkInterfaces": [
+                    {
+                        "AssociatePublicIpAddress": "false",
+                        "DeleteOnTermination": "true",
+                        "DeviceIndex": "0",
+                        "PrivateIpAddresses": [
+                          {
+                            "PrivateIpAddress" : { "Ref": "PrivateIpAddress"},
+                            "Primary" : true
+                          }
+
+                            ],
+                        "SubnetId": {
+                            "Ref": "SubnetId"
+                        },
+                        "GroupSet" : [ { "Ref" : "securityGroupAllowAll" } ],
+                    }
+                ],
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "BackendInstance"
+                    }
+                ]
+            }
+        }
+
+      },
+
+    "Outputs" : {
+      "instanceId":{
+        "Description" : "InstanceId of the private Instance",
+        "Value" : {"Ref": "PrivateInstance"}
+        }
+
+      }
+
+}
