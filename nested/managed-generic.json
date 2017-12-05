@@ -183,7 +183,7 @@
             "BYOL": ""
           },
           "eu-west-1": {
-            "PAYG": "ami-7ed40307",
+            "PAYG": "",
             "BYOL": ""
           },
           "ap-northeast-2": {
@@ -215,8 +215,8 @@
             "BYOL": ""
           },
           "us-east-1": {
-            "PAYG": "ami-723f0a09",
-            "BYOL": ""
+            "PAYG": "ami-3108cd4b",
+            "BYOL": "ami-af5b9fd5"
           },
           "us-east-2": {
             "PAYG": "",

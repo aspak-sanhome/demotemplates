@@ -36,6 +36,12 @@
         "EIPaddressNGCC" :{
           "Type" :"String",
           "Description": "EIP for CC"
+        },
+        "CCBoxPAR" : {
+          "Type" : "String"
+        },
+        "CCArchivePAR" : {
+          "Type" : "String"
         }
   },
 
@@ -47,7 +53,7 @@
       "us-west-1"        : {"AMI" : ""},
       "us-west-2"        : {"AMI" : ""},
       "ca-central-1"     : {"AMI" : ""},
-      "eu-west-1"        : {"AMI" : "ami-8f9458f6"},
+      "eu-west-1"        : {"AMI" : ""},
       "eu-west-2"        : {"AMI" : ""},
       "eu-central-1"     : {"AMI" : ""},
       "ap-northeast-1"   : {"AMI" : ""},
@@ -123,7 +129,7 @@
              "Tags": [
           {
             "Key": "Name",
-            "Value": {"Fn::Join" : ["", [{ "Ref": "ArchTagName"},"-NextGenControlCenter"
+            "Value": {"Fn::Join" : ["", [{ "Ref": "ArchTagName"},"-Hub"
               ]]}
           },
           {
@@ -131,8 +137,21 @@
             "Value": { "Ref": "ArchTagName"}
           }
         ],
+        "IamInstanceProfile" : {"Ref":"IAMRole"},
+        "UserData" : {
+          "Fn::Base64": {
+              "Fn::Join": [
+                  "",
+                  [
+                    "#!/bin/bash\n\n",
+                    { "Fn::Sub": "/opt/aws/bin/aws s3 cp s3://ngfdemolabtemplates/${CCBoxPAR} /tmp/\n" },
+                    { "Fn::Sub": "/opt/aws/bin/aws s3 cp s3://ngfdemolabtemplates/${CCArchivePAR} /tmp/\n" }
 
-        "IamInstanceProfile" : {"Ref":"IAMRole"}
+                  ]
+              ]
+          }
+
+        }
         }
 
     },
@@ -154,7 +173,12 @@
  		"Description" : "Temporary Public IP address of the Barracuda NextGen Control Center",
  		"Value" : {"Fn::GetAtt" : ["instanceNGCC", "PublicIp"]}
 
- 		}
+  },
+  "NGCCInstanceId":{
+    "Description" : "InstanceID for the Control Center",
+    "Value" : {"Ref" : "instanceNGCC"}
+
+    }
 
   }
 

@@ -18,7 +18,7 @@
     },
     "VPC" :{
     "Type" : "String",
-    "Description" : "CIDR range for Hub VPC"
+    "Description" : "CIDR range for VPC"
   },
     "PublicSubnet1" :{
     "Type" : "String",
@@ -132,6 +132,21 @@
 
  "Outputs" : {
 
+
+    	"VPC":{
+    		"Description" : "VPCID needed for instances behind this firewall",
+    		"Value" : { "Fn::GetAtt" : [ "RemoteFWVPCStack", "Outputs.VPC" ] }
+     },
+
+    "PrivateSubnet1":{
+         		"Description" : "VPCID needed for instances behind this firewall",
+         		"Value" : { "Fn::GetAtt" : [ "RemoteFWVPCStack", "Outputs.PrivateSubnet1" ] }
+          },
+
+    "PrivateSubnet2":{
+                  "Description" : "VPCID needed for instances behind this firewall",
+                  "Value" : { "Fn::GetAtt" : [ "RemoteFWVPCStack", "Outputs.PrivateSubnet2" ] }
+                }
 
 
 

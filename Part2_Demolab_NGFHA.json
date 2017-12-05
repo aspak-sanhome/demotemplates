@@ -4,7 +4,6 @@
 
   "Parameters" : {
 
-
    "ArchTagName" : {
     	"Type" : "String",
     	"Default" : "DemoLabVPC",
@@ -16,36 +15,10 @@
       "ConstraintDescription" : "Must be the name of an existing EC2 KeyPair.",
       "Default" : "CudaLab"
     },
-    "VPCId": {
-        "Type": "AWS::EC2::VPC::Id",
-        "Description": "The Id of the VPC in which this instance is being created",
-        "Default" : "vpc-9ca66ce4"
-    },
-    "PublicSubnet1Id": {
-        "Description": "The Id of the subnet in which the primary managed box is deployed",
-        "Type": "AWS::EC2::Subnet::Id",
-        "Default" : "subnet-77b46e3c"
-    },
-    "PublicSubnet2Id": {
-        "Description": "The Id of the subnet in which the secondary managed box is deployed",
-        "Type": "AWS::EC2::Subnet::Id",
-        "Default" : "subnet-23e5f879"
-    },
-    "PrivateRouteTableID" : {
+    "NetworkStackName" : {
       "Type" : "String",
-      "Description" : " RouteTable ID for the private table used to create VIP network routes",
-      "Default" : "rtb-87bf3dfd"
-    },
-     "PublicRouteTableID" : {
-       "Type" : "String",
-       "Description" : " RouteTable ID for the public route table used to create VIP network routes",
-       "Default" : "rtb-70be3c0a"
-     },
-     "NGCCinstanceId" : {
-       "Description" : "Control Center Instance ID ",
-        "Type" : "AWS::EC2::Instance::Id",
-        "Default" : "i-032e1528625dff359"
-     }
+      "Default" : "Demolab711-Hub"
+    }
 
   },
 
@@ -57,7 +30,7 @@
         	       "Properties" : {
         	           "TemplateURL" : "https://s3.amazonaws.com/ngfdemolabtemplates/nested/managed-generic.json",
         	           "Parameters" : {
-                       "LicenceMode": "PAYG",
+                       "LicenceMode": "BYOL",
                        "InstanceType": "t2.small",
                        "KeyName" : {"Ref" : "KeyName"},
                        "IAMProfile": "NextGenFirewallRole",
@@ -70,8 +43,8 @@
                        "PrivateIpAddress": "10.100.0.10",
                        "SecondaryPrivateIpAddress": "10.100.0.15",
                        "ThirdPrivateIpAddress" : "10.100.0.20",
-                       "VPCId": {"Ref" : "VPCId"},
-                       "SubnetId": {"Ref" : "PublicSubnet1Id"}
+                       "VPCId": {"Fn::ImportValue" : {"Fn::Sub" : "${NetworkStackName}-VPCID"}},
+                       "SubnetId": {"Fn::ImportValue" : {"Fn::Sub" : "${NetworkStackName}-PublicSubnet1"}}
         	           },
                      "TimeoutInMinutes" : "15"
                 }
@@ -81,7 +54,7 @@
                          "Properties" : {
                              "TemplateURL" : "https://s3.amazonaws.com/ngfdemolabtemplates/nested/managed-generic.json",
                              "Parameters" : {
-                               "LicenceMode": "PAYG",
+                               "LicenceMode": "BYOL",
                                "InstanceType": "t2.small",
                                "KeyName" : { "Ref" : "KeyName"},
                                "IAMProfile": "NextGenFirewallRole",
@@ -94,8 +67,8 @@
                                "PrivateIpAddress": "10.100.10.10",
                                "SecondaryPrivateIpAddress": "10.100.10.15",
                                "ThirdPrivateIpAddress" : "10.100.10.20",
-                               "VPCId": {"Ref" : "VPCId"},
-                               "SubnetId": {"Ref" : "PublicSubnet2Id"}
+                               "VPCId": {"Fn::ImportValue" : {"Fn::Sub" : "${NetworkStackName}-VPCID"}},
+                               "SubnetId": {"Fn::ImportValue" : {"Fn::Sub" : "${NetworkStackName}-PublicSubnet2"}}
                              },
                         "TimeoutInMinutes" : "15"
                         }
@@ -110,8 +83,8 @@
                                "EIPaddressIdPrimary" : "eipalloc-2802dc1d",
                                "EIPaddressIdSecondary" : "eipalloc-8f05dbba",
                                "instanceId" :  { "Fn::GetAtt" : [ "HAStackNGF1", "Outputs.instanceId" ] },
-                               "PrimaryPrivateIPAddress" : "10.100.0.15",
-                               "SecondaryPrivateIpAddress" : "10.100.0.20"
+                               "PrimaryPrivateIPAddress" : "10.100.0.10",
+                               "SecondaryPrivateIpAddress" : "10.100.0.15"
                              }
                         }
             },
@@ -125,8 +98,8 @@
                        "EIPaddressIdPrimary" : "eipalloc-f705dbc2",
                        "EIPaddressIdSecondary" : "eipalloc-1f0ad42a",
                        "instanceId" :  { "Fn::GetAtt" : [ "HAStackNGF2", "Outputs.instanceId" ] },
-                       "PrimaryPrivateIPAddress" : "10.100.10.15",
-                       "SecondaryPrivateIpAddress" : "10.100.10.20"
+                       "PrimaryPrivateIPAddress" : "10.100.10.10",
+                       "SecondaryPrivateIpAddress" : "10.100.10.15"
                              }
                         }
               },
@@ -137,11 +110,11 @@
                          "TemplateURL" : "https://s3.amazonaws.com/ngfdemolabtemplates/nested/hub-aws-routing.json",
                          "Parameters" : {
                            "NGFinstanceId" : { "Fn::GetAtt" : [ "HAStackNGF1", "Outputs.instanceId" ] } ,
-                           "NGCCinstanceId" : {"Ref" : "NGCCinstanceId"},
-                           "PrivateRouteTableID" : {"Ref" : "PrivateRouteTableID"},
-                           "PublicRouteTableID" : {"Ref" : "PublicRouteTableID"}
-                               }
+                           "NGCCinstanceId" : {"Fn::ImportValue" : {"Fn::Sub" : "${NetworkStackName}-NGCCInstanceId"}},
+                           "PrivateRouteTableID" : {"Fn::ImportValue" : {"Fn::Sub" : "${NetworkStackName}-PrivateRouteTable"}},
+                           "PublicRouteTableID" : {"Fn::ImportValue" : {"Fn::Sub" : "${NetworkStackName}-PublicRouteTable"}}
                           }
+                    }
               }
 
 
