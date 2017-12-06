@@ -24,6 +24,10 @@
       "Type" : "String",
       "Default" : "ami-cc24b6b6"
     },
+    "CampbellAMI" : {
+      "Type" : "String",
+      "Default" : "ami-0b17a571"
+    },
     "CCBoxPAR" : {
       "Type" : "String",
       "Default" : "CCbox04122017.par"
@@ -86,7 +90,25 @@
                             "SubnetId": { "Fn::GetAtt" : [ "HubVPCStack", "Outputs.PrivateSubnet2" ] }
             	           }
                     }
-            }
+            },
+
+            "CampbellLinuxStack":{
+                  "DependsOn" : "HubVPCStack",
+                  "Type" : "AWS::CloudFormation::Stack",
+                         "Properties" : {
+                             "TemplateURL" : "https://s3.amazonaws.com/ngfdemolabtemplates/nested/genericInstance.json",
+                             "Parameters" : {
+                               "KeyName" : {"Ref" : "KeyName"},
+                                "AMI": {"Ref" : "CampbellAMI"},
+                                "InstanceType": "t2.small",
+                                "IAMProfile": "NextGenFirewallRole",
+                                "PrivateIpAddress": "10.100.2.100",
+                                "VPCId": { "Fn::GetAtt" : [ "HubVPCStack", "Outputs.VPC" ] },
+                                "SubnetId": { "Fn::GetAtt" : [ "HubVPCStack", "Outputs.PrivateSubnet2" ] }
+                             }
+                        }
+                }
+
  },
 
  "Outputs" : {
