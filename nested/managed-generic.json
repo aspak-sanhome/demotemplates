@@ -215,8 +215,8 @@
             "BYOL": ""
           },
           "us-east-1": {
-            "PAYG": "ami-3108cd4b",
-            "BYOL": "ami-af5b9fd5"
+            "PAYG": "ami-7e304404",
+            "BYOL": "ami-278dc15d"
           },
           "us-east-2": {
             "PAYG": "",

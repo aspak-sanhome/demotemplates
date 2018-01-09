@@ -22,7 +22,7 @@
     },
     "WindowsAMI" : {
       "Type" : "String",
-      "Default" : "ami-cc24b6b6"
+      "Default" : ""
     },
     "CampbellAMI" : {
       "Type" : "String",
