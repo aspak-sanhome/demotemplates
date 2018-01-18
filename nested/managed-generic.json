@@ -1,6 +1,6 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
-    "Description": "Barracuda NextGen Firewall 7.1 - Managed Box",
+    "Description": "Barracuda NextGen Firewall - Managed Box",
     "Metadata" : {
         "AWS::CloudFormation::Interface" : {
             "ParameterGroups" : [

@@ -17,9 +17,8 @@
     },
     "NetworkStackName" : {
       "Type" : "String",
-      "Default" : "Demolab711-Hub"
+      "Default" : "Demolab720-Hub"
     }
-
   },
 
 

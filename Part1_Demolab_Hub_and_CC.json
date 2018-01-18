@@ -22,23 +22,22 @@
     },
     "WindowsAMI" : {
       "Type" : "String",
-      "Default" : ""
+      "Default" : "ami-cf9fb2b5"
     },
-    "CampbellAMI" : {
+    "CampbellLinuxAMI" : {
       "Type" : "String",
-      "Default" : "ami-0b17a571"
+      "Default" : "ami-3c7e5246"
     },
     "CCBoxPAR" : {
       "Type" : "String",
-      "Default" : "CCbox04122017.par"
+      "Default" : "CCbox16012018.par"
     },
     "CCArchivePAR" : {
       "Type" : "String",
-      "Default" : "CCarchive04122017.par"
+      "Default" : "CCarchive16012018.par"
     }
 
   },
-
 
   "Resources": {
 
@@ -99,7 +98,7 @@
                              "TemplateURL" : "https://s3.amazonaws.com/ngfdemolabtemplates/nested/genericInstance.json",
                              "Parameters" : {
                                "KeyName" : {"Ref" : "KeyName"},
-                                "AMI": {"Ref" : "CampbellAMI"},
+                                "AMI": {"Ref" : "CampbellLinuxAMI"},
                                 "InstanceType": "t2.small",
                                 "IAMProfile": "NextGenFirewallRole",
                                 "PrivateIpAddress": "10.100.2.100",

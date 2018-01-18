@@ -60,8 +60,8 @@
       "ap-northeast-2"   : {"AMI" : ""},
       "ap-southeast-1"   : {"AMI" : ""},
       "ap-southeast-2"   : {"AMI" : ""},
-      "ap-south-1"   	 : {"AMI" : ""},
-      "sa-east-1"		 : {"AMI" : ""}
+      "ap-south-1"   	   : {"AMI" : ""},
+      "sa-east-1"		     : {"AMI" : ""}
     }
 
 
@@ -144,8 +144,8 @@
                   "",
                   [
                     "#!/bin/bash\n\n",
-                    { "Fn::Sub": "/opt/aws/bin/aws s3 cp s3://ngfdemolabtemplates/${CCBoxPAR} /tmp/\n" },
-                    { "Fn::Sub": "/opt/aws/bin/aws s3 cp s3://ngfdemolabtemplates/${CCArchivePAR} /tmp/\n" }
+                    { "Fn::Sub": "/opt/aws/bin/aws s3 cp s3://ngfdemolabtemplates/PAR/${CCBoxPAR} /tmp/\n" },
+                    { "Fn::Sub": "/opt/aws/bin/aws s3 cp s3://ngfdemolabtemplatesPAR/${CCArchivePAR} /tmp/\n" }
 
                   ]
               ]
