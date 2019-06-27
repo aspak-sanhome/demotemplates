@@ -30,11 +30,11 @@
     },
     "CCBoxPAR" : {
       "Type" : "String",
-      "Default" : "CCbox16012018.par"
+      "Default" : "CCbox27062019.par"
     },
     "CCArchivePAR" : {
       "Type" : "String",
-      "Default" : "CCarchive16012018.par"
+      "Default" : "CCarchive27062019.par"
     }
 
   },
