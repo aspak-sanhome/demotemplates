@@ -132,7 +132,7 @@
                         "SubnetId": {
                             "Ref": "SubnetId"
                         },
-                        "GroupSet" : [ { "Ref" : "securityGroupAllowAll" } ],
+                        "GroupSet" : [ { "Ref" : "securityGroupAllowAll" } ]
                     }
                 ],
                 "Tags": [

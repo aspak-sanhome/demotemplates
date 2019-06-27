@@ -310,7 +310,7 @@
                         "SubnetId": {
                             "Ref": "SubnetId"
                         },
-                        "GroupSet" : [ { "Ref" : "securityGroupFW" } ],
+                        "GroupSet" : [ { "Ref" : "securityGroupFW" } ]
                     }
                 ],
                 "Tags": [
