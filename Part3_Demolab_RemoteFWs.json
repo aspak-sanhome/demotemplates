@@ -315,7 +315,66 @@
                                             "CCBoxname": "SanFrancisco"
                                          }
                                     }
+                          },
+                          "BIGBLUEstack": {
+                            "Type": "AWS::CloudFormation::Stack",
+                            "Properties": {
+                              "TemplateURL": "https://s3.amazonaws.com/ngfdemolabtemplates/nested/remoteFW.json",
+                              "Parameters": {
+                                "ArchTagName": "BigBlue",
+                                "VPC": "10.170.0.0/16",
+                                "PublicSubnet1": "10.170.0.0/24",
+                                "PublicSubnet2": "10.170.10.0/24",
+                                "PrivateSubnet1": "10.170.1.0/24",
+                                "PrivateSubnet2": "10.170.2.0/24",
+                                "EIPaddressIdPrimary": "eipalloc-4fe03e7a",
+                                "EIPaddressIdSecondary": "eipalloc-01fd9834",
+                                "PrimaryPrivateIPAddress": "10.170.0.10",
+                                "SecondaryPrivateIpAddress": "10.170.0.15",
+                                "ThirdPrivateIpAddress": "10.170.0.20",
+                                "KeyName": {
+                                  "Ref": "KeyName"
+                                },
+                                "CCPointOfEntry": {
+                                  "Ref": "CCPointOfEntry"
+                                },
+                                "CCCluster": "BigBlue",
+                                "CCRange": "1",
+                                "CCBoxname": "CGFvWAN"
+                              }
+                            }
+                          },
+                          "BEIJINGLinuxStack": {
+                            "DependsOn": "BIGBLUEstack",
+                            "Type": "AWS::CloudFormation::Stack",
+                            "Properties": {
+                              "TemplateURL": "https://s3.amazonaws.com/ngfdemolabtemplates/nested/genericInstance.json",
+                              "Parameters": {
+                                "KeyName": {
+                                  "Ref": "KeyName"
+                                },
+                                "AMI": {
+                                  "Ref": "BeijingAMI"
+                                },
+                                "InstanceType": "t2.small",
+                                "IAMProfile": "NextGenFirewallRole",
+                                "PrivateIpAddress": "10.170.1.30",
+                                "VPCId": {
+                                  "Fn::GetAtt": [
+                                    "BIGBLUEstack",
+                                    "Outputs.VPC"
+                                  ]
+                                },
+                                "SubnetId": {
+                                  "Fn::GetAtt": [
+                                    "BIGBLUEstack",
+                                    "Outputs.PrivateSubnet1"
+                                  ]
+                                }
+                              }
+                            }
                           }
+
  },
 
  "Outputs" : {
