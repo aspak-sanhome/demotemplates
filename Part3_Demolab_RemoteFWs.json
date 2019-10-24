@@ -344,7 +344,7 @@
                               }
                             }
                           },
-                          "BEIJINGLinuxStack": {
+                          "BIGBLUELinuxStack": {
                             "DependsOn": "BIGBLUEstack",
                             "Type": "AWS::CloudFormation::Stack",
                             "Properties": {
